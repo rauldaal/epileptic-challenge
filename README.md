@@ -1,1 +1,1 @@
-# epipeptic-challenge
+# Epileptic Challenge
