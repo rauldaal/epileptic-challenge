@@ -5,7 +5,7 @@ import pandas as pd
 from torch.utils.data import Dataset
 
 
-class Epileptic(Dataset):
+class EpilepticDataset(Dataset):
 	def __init__(self, parquet_folder, numpy_folder, transform):
 		self.folder_parquet = parquet_folder
 		self.folder_numpy = numpy_folder
