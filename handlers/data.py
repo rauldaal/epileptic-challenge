@@ -2,28 +2,28 @@ import math
 from torch import Generator
 from torchvision import transforms
 from torch.utils.data import DataLoader, random_split
-from objects import AnnotatedDataset, CroppedDataset, PatientDataset
+from objects import AnnotatedDataset, elipticDataset, PatientDataset
 
 
-def get_cropped_dataloader(config):
-    dataset = generate_cropped_dataset(config)
+def get_eliptic_dataloader(config):
+    dataset = generate_eliptic_dataset(config)
     train, validation = train_test_splitter(dataset=dataset, split_value=0.8, seed=config.get("seed", 42))
 
-    cropped_data_loader_train = DataLoader(
+    eliptic_data_loader_train = DataLoader(
         dataset=train,
         batch_size=config.get("batchSize"),
         shuffle=config.get("shufle"),
         num_workers=config.get("numWorkers"),
     )
 
-    cropped_data_loader_validation = DataLoader(
+    eliptic_data_loader_validation = DataLoader(
         dataset=validation,
         batch_size=config.get("batchSize"),
         shuffle=config.get("shufle"),
         num_workers=config.get("numWorkers"),
     )
 
-    return cropped_data_loader_train, cropped_data_loader_validation, dataset.get_used_patients()
+    return eliptic_data_loader_train, eliptic_data_loader_validation, dataset.get_used_patients()
 
 
 def get_annotated_dataloader(config):
@@ -44,10 +44,10 @@ def get_annotated_dataloader(config):
     return annotated_data_loader_pos, annotated_data_loader_neg
 
 
-def generate_cropped_dataset(config):
-    cropped_dataset = CroppedDataset(
-        folder_path=config.get("folder_path_cropped"),
-        csv_name=config.get("cropped_csv"),
+def generate_eliptic_dataset(config):
+    eliptic_dataset = Elip(
+        folder_path=config.get("folder_path_eliptic"),
+        csv_name=config.get("eliptic_csv"),
         transform = transforms.Compose([
             transforms.ToPILImage(),
             transforms.Resize((config.get("image_size"), config.get("image_size"))),
@@ -56,7 +56,7 @@ def generate_cropped_dataset(config):
         anti_folder=config.get("folder_path_annoted"),
         anti_csv=config.get("annoted_csv")
     )
-    return cropped_dataset
+    return eliptic_dataset
 
 
 def genearate_annotated_dataset(config):
@@ -75,6 +75,7 @@ def genearate_annotated_dataset(config):
         data.append(annotated_dataset)
     return data[0], data[1]
 
+
 def get_patients_dataloader(config, used_patients):
     patients, idx_patients, labels = generate_patients_dataset(config, used_patients)
     patient_dataloder = DataLoader(
@@ -85,10 +86,11 @@ def get_patients_dataloader(config, used_patients):
     )
     return patient_dataloder, idx_patients, labels
 
+
 def generate_patients_dataset(config, used_patients):
     patients = PatientDataset(
-        folder_path=config.get("folder_path_cropped"),
-        csv_name=config.get("cropped_csv"),
+        folder_path=config.get("folder_path_eliptic"),
+        csv_name=config.get("eliptic_csv"),
         transform = transforms.Compose([
             transforms.ToPILImage(),
             transforms.Resize((config.get("image_size"), config.get("image_size"))),
@@ -100,7 +102,6 @@ def generate_patients_dataset(config, used_patients):
     labels = patients.get_patients_results()
 
     return patients, idx_patients, labels
-
 
 
 def train_test_splitter(dataset, split_value, seed):
