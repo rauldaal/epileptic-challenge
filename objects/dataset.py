@@ -11,6 +11,7 @@ class EpilepticDataset(Dataset):
 		self.folder_numpy = numpy_folder
 		self.data = None
 		self.numpy_data = {}
+		self.transforms = None
 		self.init()
 	
 	def init(self):
