@@ -41,4 +41,4 @@ def train(model, train_data_loader, validation_data_loader, optimizer, criterion
         wandb.log({"epoch": epoch, "train_loss": train_loss})
         wandb.log({"epoch": epoch, "validation_loss": validation_loss})
 
-    return
+    return train_loss, validation_loss

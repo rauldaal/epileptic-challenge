@@ -1,77 +1,38 @@
-from objects import ConvAE
-import torch
-import torchvision
-from torch import nn
-from torchvision.utils import make_grid
-import matplotlib.pyplot as plt
-import numpy as np
-from sklearn.model_selection import KFold
-import random
-import torch.optim as optim
-from torch.utils.data import Dataset, DataLoader,TensorDataset,random_split,SubsetRandomSampler, ConcatDataset
-from torch.nn import functional as F
-from torchvision import datasets,transforms
-import torchvision.transforms as transforms
-#  use gpu if available
-assert torch.cuda.is_available(), "GPU is not enabled"
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+import pandas as pd
+from torch.utils.data import Subset
 
-import test
-import train
-from objects import model
-import data
+from .data import get_eliptic_dataloader
 
-def kfold(batch_size,num_epochs,k):
+from .train import train
+
+def get_fold_index(iter, num_folds, len_dataset):
+    len_fraction = int(len_dataset/num_folds)
+    idx_val_start = len_dataset * (iter * 1/num_folds)
+    idx_val_stop = idx_val_start + len_fraction
+    return idx_val_start, idx_val_stop
 
 
-    torch.manual_seed(42)
-    criterion = nn.CrossEntropyLoss()
+def perform_k_fold(config, model, criterion, optimizer, dataset):
+    train_score = pd.Series()
+    val_score = pd.Series()
 
+    for i in range(config.get("num_folds")):
+        idx_val_start, idx_val_stop = get_fold_index(i, config.get("num_folds"), len(dataset))
+        idx_val = list(range(idx_val_start, idx_val_stop))
+        idx_train = list(set(range(len(dataset))) - set(idx_val))
+        validation_subset = Subset(dataset, idx_val)
+        train_subset = Subset(dataset, idx_train)
+        train_loader = get_eliptic_dataloader(config, train_subset)
+        validation_loader = get_eliptic_dataloader(config, validation_subset)
+        train_acc, validation_acc = train(
+            model=model,
+            criterion=criterion,
+            optimizer=optimizer,
+            train_data_loader=train_loader,
+            validation_data_loader=validation_loader,
+            num_epochs=config.get("num_epochs")
+            )
+        train_score.at[i] = train_acc
+        val_score.at[i] = validation_acc
 
-
-    crop_data=data.generate_cropped_dataset()
-    annotated_data=data.genearate_annotated_dataset()
-
-    train_dataset,test_dataset=data.train_test_splitter(crop_data,0.2)
-    dataset = ConcatDataset([train_dataset, test_dataset])
-
-    # num_epochs=10
-    # batch_size=128
-    # k=10
-    splits=KFold(n_splits=k,shuffle=True,random_state=42)
-    foldperf={}
-
-    history = {'train_loss': [], 'test_loss': [],'train_acc':[],'test_acc':[]}
-
-    for fold, (train_idx,val_idx) in enumerate(splits.split(np.arange(len(dataset)))):
-
-        print('Fold {}'.format(fold + 1))
-
-        train_sampler = SubsetRandomSampler(train_idx)
-        test_sampler = SubsetRandomSampler(val_idx)
-        train_loader = DataLoader(dataset, batch_size=batch_size, sampler=train_sampler)
-        test_loader = DataLoader(dataset, batch_size=batch_size, sampler=test_sampler)
-        
-        model = model.convAE()
-        model.to(device)
-        optimizer = optim.Adam(model.parameters(), lr=0.002)
-
-        for epoch in range(num_epochs):
-            train_loss, train_correct=train.train(model,train_loader,criterion,optimizer)
-            test_loss, test_correct=test.test(model,test_loader,criterion)
-
-            train_loss = train_loss / len(train_loader.sampler)
-            train_acc = train_correct / len(train_loader.sampler) * 100
-            test_loss = test_loss / len(test_loader.sampler)
-            test_acc = test_correct / len(test_loader.sampler) * 100
-
-            print("Epoch:{}/{} AVG Training Loss:{:.3f} AVG Test Loss:{:.3f} AVG Training Acc {:.2f} % AVG Test Acc {:.2f} %".format(epoch + 1,
-                                                                                                                num_epochs,
-                                                                                                                train_loss,
-                                                                                                                test_loss,
-                                                                                                                train_acc,
-                                                                                                                test_acc))
-            history['train_loss'].append(train_loss)
-            history['test_loss'].append(test_loss)
-            history['train_acc'].append(train_acc)
-            history['test_acc'].append(test_acc)
+    return train_score, val_score

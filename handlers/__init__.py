@@ -1,8 +1,6 @@
 from handlers.data import (
-    get_cropped_dataloader,
-    get_annotated_dataloader,
-    get_patients_dataloader,
-    train_test_splitter,
+    get_eliptic_dataloader,
+    generate_eliptic_dataset
 )
 from handlers.generator import (
     generate_model_objects,
@@ -20,3 +18,5 @@ from handlers.test import (
 from handlers.train import train
 
 from handlers.configuration import map_configuration
+
+from handlers.Kfold import perform_k_fold

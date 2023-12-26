@@ -1,2 +1,2 @@
 from objects.dataset import EpilepticDataset
-from objects.model import Autoencoder
+from objects.model import EpilepsMoedel, LSTMModel

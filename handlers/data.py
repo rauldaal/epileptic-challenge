@@ -5,25 +5,16 @@ from torch.utils.data import DataLoader, random_split
 from objects import EpilepticDataset
 
 
-def get_eliptic_dataloader(config):
-    dataset = generate_eliptic_dataset(config)
-    train, validation = train_test_splitter(dataset=dataset, split_value=0.8, seed=config.get("seed", 42))
+def get_eliptic_dataloader(config, subset):
 
-    eliptic_data_loader_train = DataLoader(
-        dataset=train,
+    eliptic_data_loader = DataLoader(
+        dataset=subset,
         batch_size=config.get("batchSize"),
         shuffle=config.get("shufle"),
         num_workers=config.get("numWorkers"),
     )
 
-    eliptic_data_loader_validation = DataLoader(
-        dataset=validation,
-        batch_size=config.get("batchSize"),
-        shuffle=config.get("shufle"),
-        num_workers=config.get("numWorkers"),
-    )
-
-    return eliptic_data_loader_train, eliptic_data_loader_validation, dataset.get_used_patients()
+    return eliptic_data_loader
 
 
 def generate_eliptic_dataset(config):
