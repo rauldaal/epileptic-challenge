@@ -6,11 +6,11 @@ class EpilepsMoedel(nn.Module):
         super(EpilepsMoedel, self).__init__()
         
         self.network = nn.Sequential(
-            nn.Conv1d(),
-            nn.MaxPool1d(),
-            nn.Linear(),
-            nn.Dropout(),
-            nn.Linear,
+            nn.Conv1d(in_channels=21, out_channels=5, kernel_size=6),
+            nn.MaxPool1d(kernel_size=4, stride=1, padding=1),
+            nn.Linear(5, 2),
+            nn.Dropout(p=0.2),
+            nn.Linear(2, 1),
             nn.Sigmoid()
         )
 
