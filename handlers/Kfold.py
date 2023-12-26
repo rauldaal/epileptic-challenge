@@ -18,7 +18,7 @@ def perform_k_fold(config, model, criterion, optimizer, dataset):
 
     for i in range(config.get("num_folds")):
         idx_val_start, idx_val_stop = get_fold_index(i, config.get("num_folds"), len(dataset))
-        idx_val = list(range(idx_val_start, idx_val_stop))
+        idx_val = list(range(int(idx_val_start), int(idx_val_stop)))
         idx_train = list(set(range(len(dataset))) - set(idx_val))
         validation_subset = Subset(dataset, idx_val)
         train_subset = Subset(dataset, idx_train)
