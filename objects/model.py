@@ -9,14 +9,14 @@ class EpilepsMoedel(nn.Module):
             nn.Conv1d(in_channels=21, out_channels=5, kernel_size=6),
             nn.MaxPool1d(kernel_size=4, stride=1, padding=1),
             nn.Flatten(),  # Necesario para aplanar la salida antes de la capa lineal
-            nn.Linear(5 * 128, 2),  # Ajusta la entrada de acuerdo con la salida de la capa anterior
+            nn.Linear(610, 2),  # Ajusta la entrada de acuerdo con la salida de la capa anterior
             nn.Dropout(p=0.2),
             nn.Linear(2, 1),
             nn.Sigmoid()
         )
 
     def forward(self, x):
-        self.network(x)
+        x = self.network(x)
         return x
 
 class LSTMModel(nn.Module):

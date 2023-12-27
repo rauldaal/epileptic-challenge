@@ -10,7 +10,7 @@ DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def generate_model_objects(config):
     model = EpilepsMoedel(**config).to(DEVICE)
-    criterion = nn.MSELoss()
+    criterion = nn.BCELoss()
     if config.get("optimizer_type") == 'Adam':
         optimizer = optim.Adam(model.parameters(), lr=config.get("learning_rate"))
     elif config.get("optimizer_type") == 'Adadelta':

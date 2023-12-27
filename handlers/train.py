@@ -1,4 +1,5 @@
 import torch
+from torch import nn
 import wandb
 import tqdm
 
@@ -18,7 +19,7 @@ def train(model, train_data_loader, validation_data_loader, optimizer, criterion
 
             optimizer.zero_grad()
             outputs = model(window)
-            loss = criterion(outputs, cls)
+            loss = criterion(outputs, cls.view(-1, 1))
             
             loss.backward()
             optimizer.step()
@@ -30,10 +31,10 @@ def train(model, train_data_loader, validation_data_loader, optimizer, criterion
         validation_loss = 0
         model.eval()
         with torch.no_grad():
-            for imgs in tqdm.tqdm(train_data_loader):
-                imgs = imgs.to(DEVICE)
-                outputs = model(imgs)
-                loss = criterion(outputs, imgs)
+            for window, cls in tqdm.tqdm(train_data_loader):
+                window = window.to(DEVICE, dtype=torch.float)
+                outputs = model(window)
+                loss = criterion(outputs, cls.view(-1, 1))
                 validation_loss += loss.item()
     
         validation_loss = validation_loss / len(validation_data_loader)

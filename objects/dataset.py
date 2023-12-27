@@ -45,7 +45,7 @@ class EpilepticDataset(Dataset):
 		window = self.numpy_data[id][window_id]
 		window = window.astype(np.float32)
 		window = torch.from_numpy(window)  # Convertir a tensor
-		cls = torch.tensor(cls, dtype=torch.int64)  # Convertir a tensor
+		cls = torch.tensor(cls, dtype=torch.float)  # Convertir a tensor
 		return window, cls
 
 	def __len__(self):
