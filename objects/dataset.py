@@ -3,6 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 from torch.utils.data import Dataset
+import torch
 
 
 class EpilepticDataset(Dataset):
@@ -33,16 +34,19 @@ class EpilepticDataset(Dataset):
 		for npz in patients_files:
 			print(i)
 			i+=1
-			with np.load(os.path.join(self.folder_numpy, npz), allow_pickle=True) as data:
+			with np.load(os.path.join(self.folder_numpy, npz), mmap_mode='r',allow_pickle=True) as data:
 				name = data.files[0]
 				npy_data = data[name]
 				self.numpy_data[npz.split("_")[0]] = npy_data
 
 	def __getitem__(self, idx):
 		row = self.data.iloc[idx]
-		id, window_id, class_ = row['filename'], row['window_id'], row['class']
+		id, window_id, cls = row['filename'], row['window_id'], row['class']
 		window = self.numpy_data[id][window_id]
-		return window, class_
-	
+		window = window.astype(np.float32)
+		window = torch.from_numpy(window)  # Convertir a tensor
+		cls = torch.tensor(cls, dtype=torch.int64)  # Convertir a tensor
+		return window, cls
+
 	def __len__(self):
 		return len(self.data)

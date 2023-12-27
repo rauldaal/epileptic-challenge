@@ -13,12 +13,12 @@ def train(model, train_data_loader, validation_data_loader, optimizer, criterion
         train_loss = 0
 
         model.train()
-        for imgs in tqdm.tqdm(train_data_loader):
-            imgs = imgs.to(DEVICE, dtype=torch.float)
+        for window, cls in tqdm.tqdm(train_data_loader):
+            window = window.to(DEVICE, dtype=torch.float)
 
             optimizer.zero_grad()
-            outputs = model(imgs)
-            loss = criterion(outputs, imgs)
+            outputs = model(window)
+            loss = criterion(outputs, cls)
             
             loss.backward()
             optimizer.step()

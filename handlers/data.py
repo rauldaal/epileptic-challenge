@@ -22,7 +22,7 @@ def generate_eliptic_dataset(config):
         parquet_folder=config.get("parquet_folder"),
         numpy_folder=config.get("numpy_folder"),
         transform=None
-    ),
+    )
     return eliptic_dataset
 
 
