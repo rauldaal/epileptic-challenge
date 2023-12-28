@@ -2,15 +2,15 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import pickle
-from objects import Autoencoder
+from objects import EpilepsMoedel
 import os
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 def generate_model_objects(config):
-    model = Autoencoder(**config).to(DEVICE)
-    criterion = nn.MSELoss()
+    model = EpilepsMoedel(**config).to(DEVICE)
+    criterion = nn.BCELoss()
     if config.get("optimizer_type") == 'Adam':
         optimizer = optim.Adam(model.parameters(), lr=config.get("learning_rate"))
     elif config.get("optimizer_type") == 'Adadelta':

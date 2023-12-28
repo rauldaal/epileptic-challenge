@@ -163,4 +163,6 @@ saved_models/
 wandb/
 data/
 parquets/
-npz/
+npz/venv/*
+handlers/__pycache__/
+object

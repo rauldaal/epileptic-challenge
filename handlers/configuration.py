@@ -17,18 +17,17 @@ def map_configuration(config_data):
 
         batches = config_data.get("batchSize")
         epochs = config_data.get("num_epochs")
-        image_sizes = config_data.get("image_size")
         learning_rates = config_data.get("learning_rate")
         optimizers = config_data.get("optimizer_type")
     
-        values = [batches, epochs, image_sizes, learning_rates, optimizers]
+        values = [batches, epochs,  learning_rates, optimizers]
         numcfg = reduce((lambda x, y: x * y), [len(i) for i in values])
         configurations = [{} for i in range(numcfg)]
         for iter in range(numcfg):
             for key, value in config_data.items():
                 if key not in MAPPED_VALUES:
                     configurations[iter][key] = value
-        combinations = list(itertools.product(batches, epochs, image_sizes, learning_rates, optimizers))
+        combinations = list(itertools.product(batches, epochs,  learning_rates, optimizers))
 
         for i, comb in enumerate(combinations):
             configurations[i][MAPPED_VALUES[0]] = comb[0]
@@ -41,7 +40,7 @@ def map_configuration(config_data):
     else:
         config_data["batchSize"] = config_data.get("batchSize")[0]
         config_data["num_epochs"] = config_data.get("num_epochs")[0]
-        config_data["image_size"] = config_data.get("image_size")[0]
+        
         config_data["learning_rate"] = config_data.get("learning_rate")[0]
         config_data["optimizer_type"] = config_data.get("optimizer_type")[0]
         
