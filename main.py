@@ -36,8 +36,8 @@ def main(config):
                 model, criterion, optimizer = generate_model_objects(config=config)
                 train_dataset, test_dataset = generate_eliptic_dataset(config=config)
                 train_score, val_score = perform_k_fold(config=config, model=model, criterion=criterion, optimizer=optimizer, dataset=train_dataset)
-                print(train_score)
-                print(val_score)
+                logging.info(train_score)
+                logging.info(val_score)
                 save_model(model, config)
                 test(model=model, criterion=criterion, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset))
             else:
