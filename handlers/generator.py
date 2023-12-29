@@ -2,14 +2,14 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import pickle
-from objects import EpilepsMoedel
+from objects import EpilepsModel
 import os
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 def generate_model_objects(config):
-    model = EpilepsMoedel(**config).to(DEVICE)
+    model = EpilepsModel(**config).to(DEVICE)
     criterion = nn.BCELoss()
     if config.get("optimizer_type") == 'Adam':
         optimizer = optim.Adam(model.parameters(), lr=config.get("learning_rate"))

@@ -1,9 +1,9 @@
 import torch
 from torch import nn
 
-class EpilepsMoedel(nn.Module):
+class EpilepsModel(nn.Module):
     def __init__(self, **kwargs):
-        super(EpilepsMoedel, self).__init__()
+        super(EpilepsModel, self).__init__()
         
         self.network = nn.Sequential(
             nn.Conv1d(in_channels=21, out_channels=5, kernel_size=6),

@@ -1,4 +1,6 @@
+import numpy as np
 import pandas as pd
+from sklearn.model_selection import BaseCrossValidator
 from torch.utils.data import Subset
 
 from .data import get_eliptic_dataloader
@@ -36,3 +38,65 @@ def perform_k_fold(config, model, criterion, optimizer, dataset):
         val_score.at[i] = validation_acc
 
     return train_score, val_score
+
+def perform_group_kfold(config, model, criterion, optimizer, dataset):
+    train_score = pd.Series()
+    val_score = pd.Series()
+    custom_kfold = CustomKFold(n_splits=config.get("num_folds"), shuffle=True, random_state=42)
+    X = None # X raw data, los datos de npz, aunque creo que con los datos del dataframe ya vale
+    groups = None # una lista (con los mismos indices de X) de los ids de los pacientes
+    for idx_train, idx_val in custom_kfold.split(X, groups=groups):
+        print("Train indices:", idx_train)
+        print("Train groups:", groups[idx_train])
+        print("val indices:", idx_val)
+        print("val groups:", groups[idx_val])
+        
+        train_subset = Subset(dataset, idx_train)
+        validation_subset = Subset(dataset, idx_val)
+        train_loader = get_eliptic_dataloader(config, train_subset)
+        validation_loader = get_eliptic_dataloader(config, validation_subset)
+        train_acc, validation_acc = train(
+            model=model,
+            criterion=criterion,
+            optimizer=optimizer,
+            train_data_loader=train_loader,
+            validation_data_loader=validation_loader,
+            num_epochs=config.get("num_epochs")
+            )
+        train_score.at[i] = train_acc
+        val_score.at[i] = validation_acc
+
+    return train_score, val_score
+    
+
+class CustomKFold(BaseCrossValidator):
+    def __init__(self, n_splits=5, shuffle=False, random_state=None):
+        self.n_splits = n_splits
+        self.shuffle = shuffle
+        self.random_state = random_state
+
+    def _iter_test_indices(self, X, y=None, groups=None):
+        n_samples = X.shape[0]
+        indices = np.arange(n_samples)
+
+        if self.shuffle:
+            rng = np.random.default_rng(self.random_state)
+            indices = rng.permutation(indices)
+
+        fold_size = n_samples // self.n_splits
+
+        for i in range(self.n_splits):
+            start = i * fold_size
+            end = (i + 1) * fold_size
+
+            test_indices = indices[start:end]
+
+            group_mask = np.isin(groups[test_indices], groups)
+            while not np.all(group_mask):
+                test_indices = indices[start:end]
+                group_mask = np.isin(groups[test_indices], groups)
+
+            yield test_indices
+
+    def get_n_splits(self, X=None, y=None, groups=None):
+        return self.n_splits
