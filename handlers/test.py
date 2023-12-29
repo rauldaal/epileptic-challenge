@@ -16,63 +16,35 @@ from torchvision.utils import make_grid
 
 #  use gpu if available
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-THRESHOLD = 3.0
+THRESHOLD = .5
 
 
-def test(model, test_data_loader, criterion, label):
-    generated_labels = []
-    divisions_calcs = []
-    true_labels = []
-    if label == 1:
-        label = 'positive'
-    else:
-        label = 'negative'
-
-    columns = ["id", "image", "predicted", "loss"]
-    test_table = wandb.Table(columns=columns)
-    max_num_images = 10
-    num_images = 0
+def test(model, test_data_loader, criterion):
 
     test_loss = 0
     model.eval()
     print("++++++++"*10)
-    for imgs in tqdm.tqdm(test_data_loader):
-        if label=="positive":
-            true_class = [1 for i in range(imgs.shape[0])]
-        elif label == "negative" :
-            true_class = [0 for i in range(imgs.shape[0])]
-        true_labels.extend(true_class)
+    correct_predictions = 0
+    total_samples = 0
+    for window, cls in tqdm.tqdm(test_data_loader):
         
-        imgs = imgs.to(DEVICE, dtype=torch.float)
+        window = window.to(DEVICE, dtype=torch.float)
 
         with torch.no_grad():
-            outputs = model(imgs)
-            loss = criterion(outputs, imgs)
+            outputs = model(window)
+            predictions = (outputs >= THRESHOLD).float()
+            correct_predictions += (predictions == cls.view(-1, 1)).sum().item()
+            total_samples += cls.size(0)
+            loss = criterion(outputs, cls.view(-1, 1))
             test_loss += loss.item()
             wandb.log({"test_loss": test_loss})
             print("\nTest Loss", test_loss)
-            i = 0
-            ret, division = classifier(imgs, outputs)
-            result = sum([x == y for x, y in zip(true_class, ret)]*1)
-            generated_labels.extend(ret)
-            divisions_calcs.extend(division)
             print("++++++++"*10)
-            print(F"BATCH RESULT {label}:  {result}/{len(ret)}")
-
-            while num_images < max_num_images and i < len(outputs):
-                single_loss = criterion(outputs[i], imgs[i])
-                test_table.add_data(i, wandb.Image(imgs[i]), wandb.Image(outputs[i]), single_loss)
-                i += 1
-                num_images += 1
-
+    accuracy = correct_predictions / total_samples
+    print("\n\nACCURACY = ", accuracy)
     # compute the epoch test loss
     test_loss = test_loss / len(test_data_loader)
-
-    # display the epoch training loss
-    print(f"({label})Images Test loss = {test_loss:.6f}")
-    wandb.log({f"{label} loss": test_loss})
-    wandb.log({f"{label} predictions": test_table})
-    return true_labels, generated_labels, divisions_calcs
+    return
 
 
 def convertir_a_hsv(input, output):
