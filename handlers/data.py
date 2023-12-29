@@ -1,3 +1,4 @@
+import logging
 import math
 from torch import Generator
 from torchvision import transforms
@@ -23,13 +24,14 @@ def generate_eliptic_dataset(config):
         numpy_folder=config.get("numpy_folder"),
         transform=None
     )
-    return eliptic_dataset
+    train, test = train_test_splitter(dataset=eliptic_dataset, split_value=0.6, seed=config.get("seed"))
+    return train, test
 
 
 def train_test_splitter(dataset, split_value, seed):
     size_train = math.ceil(len(dataset)*split_value)
     size_test = len(dataset)-size_train
-    print(size_test, size_train)
-    print(len(dataset))
+    logging.info(size_test, size_train)
+    logging.info(len(dataset))
     train, test = random_split(dataset, [size_train, size_test], generator=Generator().manual_seed(seed))
     return train, test

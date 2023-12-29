@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import BaseCrossValidator
@@ -47,10 +48,10 @@ def perform_group_kfold(config, model, criterion, optimizer, dataset):
     groups = X['filename'].values
     i = 0
     for idx_train, idx_val in custom_kfold.split(X, groups=groups):
-        print("Train indices:", idx_train)
-        print("Train groups:", groups[idx_train])
-        print("val indices:", idx_val)
-        print("val groups:", groups[idx_val])
+        logging.info("Train indices:", idx_train)
+        logging.info("Train groups:", groups[idx_train])
+        logging.info("val indices:", idx_val)
+        logging.info("val groups:", groups[idx_val])
         
         train_subset = Subset(dataset, idx_train)
         validation_subset = Subset(dataset, idx_val)

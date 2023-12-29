@@ -35,9 +35,9 @@ def save_model(model, config):
         os.makedirs(models_dir, exist_ok=True)
         with open(os.path.join(models_dir, config.get("execution_name") + '.pickle'), 'wb') as handle:
             pickle.dump(model, handle)
-        print("Modelo Guardado Correctamente")
+        logging.info("Modelo Guardado Correctamente")
     except Exception as e:
-        print(f"Error en el guardado. Error: {e}")
+        logging.info(f"Error en el guardado. Error: {e}")
 
 
 def load_model(config):

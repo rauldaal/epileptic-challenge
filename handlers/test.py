@@ -1,10 +1,12 @@
 import cv2
+import logging
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import tqdm
 import wandb
 import seaborn as sns
+import logging
 from sklearn.metrics import (
     roc_curve,
     auc,
@@ -16,63 +18,35 @@ from torchvision.utils import make_grid
 
 #  use gpu if available
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-THRESHOLD = 3.0
+THRESHOLD = .5
 
 
-def test(model, test_data_loader, criterion, label):
-    generated_labels = []
-    divisions_calcs = []
-    true_labels = []
-    if label == 1:
-        label = 'positive'
-    else:
-        label = 'negative'
-
-    columns = ["id", "image", "predicted", "loss"]
-    test_table = wandb.Table(columns=columns)
-    max_num_images = 10
-    num_images = 0
+def test(model, test_data_loader, criterion):
 
     test_loss = 0
     model.eval()
-    print("++++++++"*10)
-    for imgs in tqdm.tqdm(test_data_loader):
-        if label=="positive":
-            true_class = [1 for i in range(imgs.shape[0])]
-        elif label == "negative" :
-            true_class = [0 for i in range(imgs.shape[0])]
-        true_labels.extend(true_class)
+    logging.info("++++++++"*10)
+    correct_predictions = 0
+    total_samples = 0
+    for window, cls in tqdm.tqdm(test_data_loader):
         
-        imgs = imgs.to(DEVICE, dtype=torch.float)
+        window = window.to(DEVICE, dtype=torch.float)
 
         with torch.no_grad():
-            outputs = model(imgs)
-            loss = criterion(outputs, imgs)
+            outputs = model(window)
+            predictions = (outputs >= THRESHOLD).float()
+            correct_predictions += (predictions == cls.view(-1, 1)).sum().item()
+            total_samples += cls.size(0)
+            loss = criterion(outputs, cls.view(-1, 1))
             test_loss += loss.item()
             wandb.log({"test_loss": test_loss})
-            print("\nTest Loss", test_loss)
-            i = 0
-            ret, division = classifier(imgs, outputs)
-            result = sum([x == y for x, y in zip(true_class, ret)]*1)
-            generated_labels.extend(ret)
-            divisions_calcs.extend(division)
-            print("++++++++"*10)
-            print(F"BATCH RESULT {label}:  {result}/{len(ret)}")
-
-            while num_images < max_num_images and i < len(outputs):
-                single_loss = criterion(outputs[i], imgs[i])
-                test_table.add_data(i, wandb.Image(imgs[i]), wandb.Image(outputs[i]), single_loss)
-                i += 1
-                num_images += 1
-
+            logging.info("\nTest Loss", test_loss)
+            logging.info("++++++++"*10)
+    accuracy = correct_predictions / total_samples
+    logging.info("\n\nACCURACY = ", accuracy)
     # compute the epoch test loss
     test_loss = test_loss / len(test_data_loader)
-
-    # display the epoch training loss
-    print(f"({label})Images Test loss = {test_loss:.6f}")
-    wandb.log({f"{label} loss": test_loss})
-    wandb.log({f"{label} predictions": test_table})
-    return true_labels, generated_labels, divisions_calcs
+    return
 
 
 def convertir_a_hsv(input, output):
@@ -89,14 +63,14 @@ def convertir_a_hsv(input, output):
         input_imagen_hsv = cv2.cvtColor(input[i].to("cpu").numpy(), cv2.COLOR_RGB2HSV)
         input_canal_h[i] = input_imagen_hsv[:, :, 0]
         f_red_input = np.sum(np.logical_or(input_canal_h[i] >= 340, input_canal_h[i] <= 20))
-        #print("++++++"*5)
-        #print(f"f_red_input:     {f_red_input}")
+        #logging.info("++++++"*5)
+        #logging.info(f"f_red_input:     {f_red_input}")
 
         output_imagen_hsv = cv2.cvtColor(output[i].to("cpu").numpy(), cv2.COLOR_RGB2HSV)
         output_canal_h[i] = output_imagen_hsv[:, :, 0]
         f_red_output = np.sum(np.logical_or(output_canal_h[i] >= 340, output_canal_h[i] <= 20))
-        #print(f"f_red_output:     {f_red_output}")       
-        #print("++++++"*5)
+        #logging.info(f"f_red_output:     {f_red_output}")       
+        #logging.info("++++++"*5)
         input_results.append(f_red_input)
         output_results.append(f_red_output)
 
@@ -125,7 +99,7 @@ def analyzer(results, true_labels, project_path, name=None):
     youden_index = tpr - fpr
     optimal_threshold = thresholds[np.argmax(youden_index)]
 
-    print(f'Umbral óptimo: {optimal_threshold}')
+    logging.info(f'Umbral óptimo: {optimal_threshold}')
     plt.figure(figsize=(8, 8))
     plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'AUC = {roc_auc:.2f}')
     plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
@@ -151,7 +125,7 @@ def compute_confussion_matrix(true, pred, project_path, name=None):
     plt.savefig(project_path+"/plots/"+name)
     plt.show()
     acc = accuracy_score(true, pred)
-    print(f"ACCURACY SCORE: {acc}")
+    logging.info(f"ACCURACY SCORE: {acc}")
 
 
 def compute_classification(dataloader, patients_idx, labels, model, project_path):
@@ -166,8 +140,8 @@ def compute_classification(dataloader, patients_idx, labels, model, project_path
             generated_labels.extend(ret)
     
     labels_per_patient = {}
-    print(len(list(generated_labels)))
-    print(len(list(patients_idx.keys())))
+    logging.info(len(list(generated_labels)))
+    logging.info(len(list(patients_idx.keys())))
     for indice, id_valor in patients_idx.items():
         if id_valor not in list(labels_per_patient.keys()):
             labels_per_patient[id_valor] = []
