@@ -1,5 +1,4 @@
 import cv2
-import logging
 import os
 import numpy as np
 import pandas as pd
@@ -16,24 +15,35 @@ class EpilepticDataset(Dataset):
 		self.transforms = None
 		self.init()
 	
+	def __format_filename(self, string):
+		sufix = string[3:]
+		if sufix.isdigit():
+			return string
+		else:
+			indice = 0
+			while indice < len(sufix) and not sufix[indice].isdigit():
+				indice += 1
+			return string[:3] + sufix[:indice]
+ 
+	
 	def init(self):
 		parquet_files = os.listdir(self.folder_parquet)
 		patients_files = [pf.split("_")[0]+"_seizure_EEGwindow_1.npz" for pf in parquet_files]
 		i=0
 		for parquet in parquet_files:
-			logging.info(i)
+			print(i)
 			i+=1
 			df = pd.read_parquet(os.path.join(self.folder_parquet, parquet))
 			df['window_id'] = df.index
-			df['filename'] = df['filename'].apply(lambda x: x.split("_")[0])
+			df['filename'] = df['filename'].apply(lambda x: self.__format_filename(x.split("_")[0]))
 			if self.data is None:
 				self.data = df
 			else:
 				self.data = pd.concat([self.data, df])
-		logging.info("PARQUET DONE... READING NUMPY")
+		print("PARQUET DONE... READING NUMPY")
 		i=0
 		for npz in patients_files:
-			logging.info(i)
+			print(i)
 			i+=1
 			with np.load(os.path.join(self.folder_numpy, npz), mmap_mode='r',allow_pickle=True) as data:
 				name = data.files[0]

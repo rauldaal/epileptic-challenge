@@ -31,7 +31,7 @@ def generate_eliptic_dataset(config):
 def train_test_splitter(dataset, split_value, seed):
     size_train = math.ceil(len(dataset)*split_value)
     size_test = len(dataset)-size_train
-    logging.info(size_test, size_train)
+    logging.info(f"size_test: {size_test}.     size_train:   {size_train}")
     logging.info(len(dataset))
     train, test = random_split(dataset, [size_train, size_test], generator=Generator().manual_seed(seed))
     return train, test
