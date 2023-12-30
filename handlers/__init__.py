@@ -19,4 +19,6 @@ from handlers.train import train
 
 from handlers.configuration import map_configuration
 
-from handlers.Kfold import perform_k_fold
+from handlers.Kfold import (
+    perform_k_fold,
+    perform_group_kfold)

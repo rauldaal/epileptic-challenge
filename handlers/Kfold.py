@@ -44,8 +44,9 @@ def perform_group_kfold(config, model, criterion, optimizer, dataset):
     train_score = pd.Series()
     val_score = pd.Series()
     custom_kfold = CustomKFold(n_splits=config.get("num_folds"), shuffle=True, random_state=42)
-    X = None # X raw data, los datos de npz, aunque creo que con los datos del dataframe ya vale
-    groups = None # una lista (con los mismos indices de X) de los ids de los pacientes
+    X = dataset.data
+    groups = X['filename'].values
+    i = 0
     for idx_train, idx_val in custom_kfold.split(X, groups=groups):
         logging.info("Train indices:", idx_train)
         logging.info("Train groups:", groups[idx_train])
@@ -66,6 +67,7 @@ def perform_group_kfold(config, model, criterion, optimizer, dataset):
             )
         train_score.at[i] = train_acc
         val_score.at[i] = validation_acc
+        i += 1
 
     return train_score, val_score
     
