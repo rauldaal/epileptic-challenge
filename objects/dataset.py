@@ -22,7 +22,7 @@ class EpilepticDataset(Dataset):
 			return string
 		else:
 			indice = 0
-			while indice < len(sufix) and not sufix[indice].isdigit():
+			while indice < len(sufix) and sufix[indice].isdigit():
 				indice += 1
 			return string[:3] + sufix[:indice]
  
