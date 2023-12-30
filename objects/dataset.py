@@ -1,4 +1,5 @@
 import cv2
+import logging
 import os
 import numpy as np
 import pandas as pd
@@ -31,7 +32,7 @@ class EpilepticDataset(Dataset):
 		patients_files = [pf.split("_")[0]+"_seizure_EEGwindow_1.npz" for pf in parquet_files]
 		i=0
 		for parquet in parquet_files:
-			print(i)
+			logging.info(i)
 			i+=1
 			df = pd.read_parquet(os.path.join(self.folder_parquet, parquet))
 			df['window_id'] = df.index
@@ -40,10 +41,10 @@ class EpilepticDataset(Dataset):
 				self.data = df
 			else:
 				self.data = pd.concat([self.data, df])
-		print("PARQUET DONE... READING NUMPY")
+		logging.info("PARQUET DONE... READING NUMPY")
 		i=0
 		for npz in patients_files:
-			print(i)
+			logging.info(i)
 			i+=1
 			with np.load(os.path.join(self.folder_numpy, npz), mmap_mode='r',allow_pickle=True) as data:
 				name = data.files[0]
