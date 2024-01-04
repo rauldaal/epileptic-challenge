@@ -20,6 +20,7 @@ def train(model, train_data_loader, validation_data_loader, optimizer, criterion
 
             optimizer.zero_grad()
             outputs = model(window)
+            outputs = outputs.cpu()
             loss = criterion(outputs, cls.view(-1, 1))
             
             loss.backward()
@@ -35,6 +36,7 @@ def train(model, train_data_loader, validation_data_loader, optimizer, criterion
             for window, cls in tqdm.tqdm(train_data_loader):
                 window = window.to(DEVICE, dtype=torch.float)
                 outputs = model(window)
+                outputs = outputs.cpu()
                 loss = criterion(outputs, cls.view(-1, 1))
                 validation_loss += loss.item()
     
