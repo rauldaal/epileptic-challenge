@@ -37,7 +37,7 @@ def perform_k_fold(config, model, criterion, optimizer, dataset):
             )
         train_score.at[i] = train_acc
         val_score.at[i] = validation_acc
-
+        logging.info(f"***********FOLD {i} FINISED**********")
     return train_score, val_score
 
 def perform_group_kfold(config, model, criterion, optimizer, dataset):
