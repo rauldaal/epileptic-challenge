@@ -17,10 +17,10 @@ def train(model, train_data_loader, validation_data_loader, optimizer, criterion
         model.train()
         for window, cls in tqdm.tqdm(train_data_loader):
             window = window.to(DEVICE, dtype=torch.float)
+            cls = cls.to(DEVICE, dtype=torch.float)
 
             optimizer.zero_grad()
             outputs = model(window)
-            outputs = outputs.cpu()
             loss = criterion(outputs, cls.view(-1, 1))
             
             loss.backward()
