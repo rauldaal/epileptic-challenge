@@ -35,7 +35,7 @@ def train(model, train_data_loader, validation_data_loader, optimizer, criterion
         with torch.no_grad():
             for window, cls in tqdm.tqdm(validation_data_loader):
                 window = window.to(DEVICE, dtype=torch.float)
-		cls = cls.to(DEVICE, dtype=torch.float)
+                cls = cls.to(DEVICE, dtype=torch.float)
                 outputs = model(window)
                 loss = criterion(outputs, cls.view(-1, 1))
                 validation_loss += loss.item()
