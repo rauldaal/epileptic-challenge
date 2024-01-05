@@ -28,11 +28,11 @@ class EpilepticDataset(Dataset):
  
 	
 	def init(self):
-		parquet_files = os.listdir(self.folder_parquet)
+		parquet_files = os.listdir(self.folder_parquet)[:5]
 		patients_files = [pf.split("_")[0]+"_seizure_EEGwindow_1.npz" for pf in parquet_files]
 		i=0
 		for parquet in parquet_files:
-			logging.info(i)
+			logging.info(f"FILE NUM {i}  --   FILE NAME  {parquet}")
 			i+=1
 			df = pd.read_parquet(os.path.join(self.folder_parquet, parquet))
 			df['window_id'] = df.index

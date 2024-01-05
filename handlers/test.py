@@ -31,7 +31,7 @@ def test(model, test_data_loader, criterion):
     for window, cls in tqdm.tqdm(test_data_loader):
         
         window = window.to(DEVICE, dtype=torch.float)
-
+	cls = cls.to(DEVICE, dtype=torch.float)
         with torch.no_grad():
             outputs = model(window)
             predictions = (outputs >= THRESHOLD).float()

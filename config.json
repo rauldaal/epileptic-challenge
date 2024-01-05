@@ -5,9 +5,10 @@
     "project_path": "/fhome/mapsiv04/epileptic-challenge",
     "numpy_folder": "/fhome/mapsiv/Epilepsy/annotated_windows",
     "parquet_folder":"/fhome/mapsiv04/metadata",
+    "num_folds": 4,
 
-    "numWorkers": 0,
-    "batchSize": [128],
+    "numWorkers": 4,
+    "batchSize": [2048],
     "model_name": null,
     "execution_name": "testing_execution",
 
