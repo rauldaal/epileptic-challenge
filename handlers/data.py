@@ -24,7 +24,7 @@ def generate_eliptic_dataset(config):
         numpy_folder=config.get("numpy_folder"),
         transform=None
     )
-    train, test = train_test_splitter(dataset=eliptic_dataset, split_value=0.6, seed=config.get("seed"))
+    train, test = train_test_splitter(dataset=eliptic_dataset, split_value=0.8, seed=config.get("seed"))
     return train, test
 
 

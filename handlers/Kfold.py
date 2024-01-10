@@ -6,7 +6,7 @@ from torch.utils.data import Subset
 
 from .data import get_eliptic_dataloader
 
-from .train import train
+from .train import train, train_lstm
 
 def get_fold_index(iter, num_folds, len_dataset):
     len_fraction = int(len_dataset/num_folds)
@@ -15,7 +15,7 @@ def get_fold_index(iter, num_folds, len_dataset):
     return idx_val_start, idx_val_stop
 
 
-def perform_k_fold(config, model, criterion, optimizer, dataset):
+def perform_k_fold(config, model, criterion, optimizer, dataset, lstm=False):
     train_score = pd.Series()
     val_score = pd.Series()
 
@@ -27,14 +27,26 @@ def perform_k_fold(config, model, criterion, optimizer, dataset):
         train_subset = Subset(dataset, idx_train)
         train_loader = get_eliptic_dataloader(config, train_subset)
         validation_loader = get_eliptic_dataloader(config, validation_subset)
-        train_acc, validation_acc = train(
-            model=model,
-            criterion=criterion,
-            optimizer=optimizer,
-            train_data_loader=train_loader,
-            validation_data_loader=validation_loader,
-            num_epochs=config.get("num_epochs")
-            )
+        if not lstm:
+            train_acc, validation_acc = train(
+                model=model,
+                criterion=criterion,
+                optimizer=optimizer,
+                train_data_loader=train_loader,
+                validation_data_loader=validation_loader,
+                num_epochs=config.get("num_epochs"),
+                fold=i
+                )
+        else:
+            train_acc, validation_acc = train_lstm(
+                model=model,
+                criterion=criterion,
+                optimizer=optimizer,
+                train_data_loader=train_loader,
+                validation_data_loader=validation_loader,
+                num_epochs=config.get("num_epochs"),
+                fold=i
+                )
         train_score.at[i] = train_acc
         val_score.at[i] = validation_acc
         logging.info(f"***********FOLD {i} FINISED**********")

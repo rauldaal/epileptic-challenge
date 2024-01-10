@@ -6,6 +6,7 @@ import uuid
 
 from handlers import (
     generate_eliptic_dataset,
+    generate_lstm_model_objects,
     generate_model_objects,
     get_eliptic_dataloader,
     map_configuration,
@@ -15,7 +16,7 @@ from handlers import (
     test,
     )
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def main(config):
@@ -30,11 +31,18 @@ def main(config):
             reinit = True, config=config):
             wandb.define_metric('train_loss', step_metric='epoch')
             wandb.define_metric('validation_loss', step_metric='epoch')
+            wandb.define_metric('validation_loss_lstm', step_metric='epoch_lstm')
+            wandb.define_metric('train_loss_lstm', step_metric='epoch_lstm')
 
             if not config.get("model_name"):
 
                 model, criterion, optimizer = generate_model_objects(config=config)
+                model_LSTM, criterion_LSTM, optimizer_LSTM = generate_lstm_model_objects(config=config)
+
                 train_dataset, test_dataset = generate_eliptic_dataset(config=config)
+                train_score, val_score = perform_k_fold(config=config, model=model_LSTM, criterion=criterion_LSTM, optimizer=optimizer_LSTM, dataset=train_dataset)
+                logging.info(train_score)
+                logging.info(val_score)
                 train_score, val_score = perform_k_fold(config=config, model=model, criterion=criterion, optimizer=optimizer, dataset=train_dataset)
                 logging.info(train_score)
                 logging.info(val_score)
@@ -45,7 +53,7 @@ def main(config):
 
 
 if __name__ == "__main__":
-    with open("/fhome/mapsiv04/epileptic-challenge/config.json", "r") as f:
+    with open("C:/Users/Raul/OneDrive - UAB/4t/MA PSIV/RETO EPILIEPSIA/epileptic-challenge/config.json", "r") as f:
         config_data = json.load(f)
         main(config=config_data)
 

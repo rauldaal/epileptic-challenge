@@ -2,13 +2,13 @@
     "projectName": "Epilepsy",
     "multiexecution": false,
     "seed": 42,
-    "project_path": "/fhome/mapsiv04/epileptic-challenge",
-    "numpy_folder": "/fhome/mapsiv/Epilepsy/annotated_windows",
-    "parquet_folder":"/fhome/mapsiv04/metadata",
+    "project_path": "C:/Users/Raul/OneDrive - UAB/4t/MA PSIV/RETO EPILIEPSIA/epileptic-challenge",
+    "numpy_folder": "C:/Users/Raul/OneDrive - UAB/4t/MA PSIV/RETO EPILIEPSIA/Annotated Windows-20231226/chb01",
+    "parquet_folder":"C:/Users/Raul/OneDrive - UAB/4t/MA PSIV/RETO EPILIEPSIA/Annotated Windows-20231226/metadata",
     "num_folds": 4,
 
-    "numWorkers": 4,
-    "batchSize": [2048],
+    "numWorkers": 0,
+    "batchSize": [128],
     "model_name": null,
     "execution_name": "testing_execution",
 

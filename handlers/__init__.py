@@ -2,7 +2,9 @@ from handlers.data import (
     get_eliptic_dataloader,
     generate_eliptic_dataset
 )
+
 from handlers.generator import (
+    generate_lstm_model_objects,
     generate_model_objects,
     save_model,
     load_model
@@ -15,7 +17,10 @@ from handlers.test import (
     compute_classification
 )
 
-from handlers.train import train
+from handlers.train import (
+    train,
+    train_lstm
+)
 
 from handlers.configuration import map_configuration
 
