@@ -28,6 +28,7 @@ def perform_k_fold(config, model, criterion, optimizer, dataset, lstm=False):
         train_loader = get_eliptic_dataloader(config, train_subset)
         validation_loader = get_eliptic_dataloader(config, validation_subset)
         if not lstm:
+            logging.info("NORMAL TRAIN")
             train_acc, validation_acc = train(
                 model=model,
                 criterion=criterion,
@@ -38,6 +39,7 @@ def perform_k_fold(config, model, criterion, optimizer, dataset, lstm=False):
                 fold=i
                 )
         else:
+            logging.info("LSTM TRAIN")
             train_acc, validation_acc = train_lstm(
                 model=model,
                 criterion=criterion,

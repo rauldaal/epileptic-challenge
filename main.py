@@ -40,7 +40,8 @@ def main(config):
                 model_LSTM, criterion_LSTM, optimizer_LSTM = generate_lstm_model_objects(config=config)
 
                 train_dataset, test_dataset = generate_eliptic_dataset(config=config)
-                train_score, val_score = perform_k_fold(config=config, model=model_LSTM, criterion=criterion_LSTM, optimizer=optimizer_LSTM, dataset=train_dataset)
+                logging.info("KFOLD LSTM")
+                train_score, val_score = perform_k_fold(config=config, model=model_LSTM, criterion=criterion_LSTM, optimizer=optimizer_LSTM, dataset=train_dataset, lstm=True)
                 logging.info(train_score)
                 logging.info(val_score)
                 train_score, val_score = perform_k_fold(config=config, model=model, criterion=criterion, optimizer=optimizer, dataset=train_dataset)

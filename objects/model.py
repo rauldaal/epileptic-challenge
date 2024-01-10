@@ -22,12 +22,24 @@ class EpilepsModel(nn.Module):
 class LSTMModel(nn.Module):
     def __init__(self, **kwargs):
         super(LSTMModel, self).__init__()
-        self.lstm = nn.LSTM(input_size=21, hidden_size=16, num_layers=2, batch_first=True)
-        self.fc1 = nn.Linear(16, 1)
+        self.hidden_size = 8
+        self.input_size = 128
+        self.num_layers = 2
+        self.batch_size = 128
+        self.lstm = nn.LSTM(input_size=self.input_size, hidden_size=self.hidden_size, num_layers=self.num_layers, batch_first=True)
+        self.fc1 = nn.Linear(8, 1)
         self.sig = nn.Sigmoid()
 
+        self.hidden_state = self.init_hidden(self.hidden_size, self.num_layers, self.batch_size)
+
+
+    def init_hidden(self, hidden_size, num_layers, batch_size):
+        # Inicializar el estado oculto y de celda con tensores de ceros
+        return (torch.zeros(num_layers, batch_size, hidden_size),
+                torch.zeros(num_layers, batch_size, hidden_size))
+
     def forward(self, x):
-        out, _ = self.lstm(x)
+        out, _ = self.lstm(x, self.hidden_state)
         out = out[:, -1, :]
         out = self.fc1(out)
         out = self.sig(out)

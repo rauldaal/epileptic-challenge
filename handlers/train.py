@@ -52,13 +52,13 @@ def train_lstm(model, train_data_loader, validation_data_loader, optimizer, crit
     for epoch in range(num_epochs):
         logging.info("+++++"*10)
         train_loss = 0
-
         model.train()
         for window, cls in tqdm.tqdm(train_data_loader):
+            #window = torch.transpose(window, 0, 1)
             window = window.to(DEVICE, dtype=torch.float)
+            batch = window.shape[0]
             cls = cls.to(DEVICE, dtype=torch.float)
-
-            model.hidden_state = model.init_hidden()
+            model.hidden_state = model.init_hidden(hidden_size=8, num_layers=2, batch_size=batch)
             optimizer.zero_grad()
 
             outputs = model(window)
@@ -77,7 +77,8 @@ def train_lstm(model, train_data_loader, validation_data_loader, optimizer, crit
             for window, cls in tqdm.tqdm(validation_data_loader):
                 window = window.to(DEVICE, dtype=torch.float)
                 cls = cls.to(DEVICE, dtype=torch.float)
-                model.hidden_state = model.init_hidden()
+                batch = window.shape[0]
+                model.hidden_state = model.init_hidden(hidden_size=8, num_layers=2, batch_size=batch)
                 outputs = model(window)
                 loss = criterion(outputs, cls.view(-1, 1))
                 validation_loss += loss.item()
@@ -86,3 +87,5 @@ def train_lstm(model, train_data_loader, validation_data_loader, optimizer, crit
         logging.info("EPOCH : {}/{}, Validation Loss = {:.6f}".format(epoch + 1, num_epochs, validation_loss))
         wandb.log({"epoch_lstm": (fold*num_epochs+epoch), "train_loss_lstm": train_loss})
         wandb.log({"epoch_lstm": (fold*num_epochs+epoch), "validation_loss_lstm": validation_loss})
+    return train_loss, validation_loss
+    
