@@ -14,6 +14,7 @@ from handlers import (
     perform_k_fold,
     save_model,
     test,
+    test_lstm,
     )
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -48,6 +49,7 @@ def main(config):
                 logging.info(train_score)
                 logging.info(val_score)
                 save_model(model, config)
+                test_lstm(model=model_LSTM, criterion=criterion_LSTM, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset))
                 test(model=model, criterion=criterion, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset))
             else:
                 model, criterion = load_model(config)

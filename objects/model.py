@@ -22,12 +22,12 @@ class EpilepsModel(nn.Module):
 class LSTMModel(nn.Module):
     def __init__(self, **kwargs):
         super(LSTMModel, self).__init__()
-        self.hidden_size = 8
+        self.hidden_size = 64
         self.input_size = 128
-        self.num_layers = 2
+        self.num_layers = 8
         self.batch_size = 128
         self.lstm = nn.LSTM(input_size=self.input_size, hidden_size=self.hidden_size, num_layers=self.num_layers, batch_first=True)
-        self.fc1 = nn.Linear(8, 1)
+        self.fc1 = nn.Linear(self.hidden_size, 1)
         self.sig = nn.Sigmoid()
 
         self.hidden_state = self.init_hidden(self.hidden_size, self.num_layers, self.batch_size)

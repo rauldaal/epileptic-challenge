@@ -58,7 +58,7 @@ def train_lstm(model, train_data_loader, validation_data_loader, optimizer, crit
             window = window.to(DEVICE, dtype=torch.float)
             batch = window.shape[0]
             cls = cls.to(DEVICE, dtype=torch.float)
-            model.hidden_state = model.init_hidden(hidden_size=8, num_layers=2, batch_size=batch)
+            model.hidden_state = model.init_hidden(hidden_size=64, num_layers=8, batch_size=batch)
             optimizer.zero_grad()
 
             outputs = model(window)
@@ -78,7 +78,7 @@ def train_lstm(model, train_data_loader, validation_data_loader, optimizer, crit
                 window = window.to(DEVICE, dtype=torch.float)
                 cls = cls.to(DEVICE, dtype=torch.float)
                 batch = window.shape[0]
-                model.hidden_state = model.init_hidden(hidden_size=8, num_layers=2, batch_size=batch)
+                model.hidden_state = model.init_hidden(hidden_size=64, num_layers=8, batch_size=batch)
                 outputs = model(window)
                 loss = criterion(outputs, cls.view(-1, 1))
                 validation_loss += loss.item()

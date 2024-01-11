@@ -59,12 +59,56 @@ def test(model, test_data_loader, criterion):
     plt.title('Matriz de Confusión')
     plt.show()
 
-
-
     # compute the epoch test loss
     test_loss = test_loss / len(test_data_loader)
     return
 
+
+def test_lstm(model, test_data_loader, criterion):
+
+    test_loss = 0
+    model.eval()
+    logging.info("++++++++"*10)
+    correct_predictions = 0
+    total_samples = 0
+    predicciones_lista = []
+    etiquetas_verdaderas_lista = []
+    for window, cls in tqdm.tqdm(test_data_loader):
+        
+        window = window.to(DEVICE, dtype=torch.float)
+        cls = cls.to(DEVICE, dtype=torch.float)
+
+        batch = window.shape[0]
+
+        with torch.no_grad():
+            model.hidden_state = model.init_hidden(hidden_size=64, num_layers=8, batch_size=batch)
+            outputs = model(window)
+            predictions = (outputs >= THRESHOLD).float()
+            correct_predictions += (predictions == cls.view(-1, 1)).sum().item()
+            total_samples += cls.size(0)
+            loss = criterion(outputs, cls.view(-1, 1))
+            test_loss += loss.item()
+            predicciones_lista.append(predictions.cpu().numpy())
+            etiquetas_verdaderas_lista.append(cls.cpu().numpy())
+            wandb.log({"test_loss": test_loss})
+            logging.info(f"Test Loss {test_loss}")
+            logging.info("++++++++"*10)
+    accuracy = correct_predictions / total_samples
+    logging.info(f"ACCURACY {accuracy}")
+    y_pred = np.concatenate(predicciones_lista, axis=0)
+    y_true = np.concatenate(etiquetas_verdaderas_lista, axis=0)
+    cm = confusion_matrix(y_true, y_pred)
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=False, 
+                xticklabels=['Tipo 0', 'Tipo 1'], yticklabels=['Tipo 0', 'Tipo 1'])
+    plt.xlabel('Predicciones')
+    plt.ylabel('Etiquetas Verdaderas')
+    plt.title('Matriz de Confusión')
+    plt.show()
+
+    # compute the epoch test loss
+    test_loss = test_loss / len(test_data_loader)
+    return
 
 def convertir_a_hsv(input, output):
     input_results = []

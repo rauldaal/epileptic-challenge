@@ -12,6 +12,7 @@ from handlers.generator import (
 
 from handlers.test import (
     test,
+    test_lstm,
     analyzer,
     compute_confussion_matrix,
     compute_classification
