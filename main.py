@@ -51,6 +51,22 @@ def main(config):
                 save_model(model, config)
                 test_lstm(model=model_LSTM, criterion=criterion_LSTM, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset))
                 test(model=model, criterion=criterion, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset))
+                
+                # Group kfold
+                model, criterion, optimizer = generate_model_objects(config=config)
+                model_LSTM, criterion_LSTM, optimizer_LSTM = generate_lstm_model_objects(config=config)
+                # train_dataset, test_dataset = generate_eliptic_dataset(config=config)
+                logging.info("GROUP KFOLD LSTM")
+                train_score, val_score = perform_group_kfold(config=config, model=model, criterion=criterion, optimizer=optimizer, dataset=train_dataset)
+                logging.info(train_score)
+                logging.info(val_score)
+                train_score, val_score = perform_group_kfold(config=config, model=model_LSTM, criterion=criterion_LSTM, optimizer=optimizer_LSTM, dataset=train_dataset, lstm=True)
+                logging.info(train_score)
+                logging.info(val_score)
+                save_model(model, config)
+                test_lstm(model=model_LSTM, criterion=criterion_LSTM, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset))
+                test(model=model, criterion=criterion, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset))
+                
             else:
                 model, criterion = load_model(config)
 
