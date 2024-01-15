@@ -54,11 +54,11 @@ def perform_k_fold(config, model, criterion, optimizer, dataset, lstm=False):
         logging.info(f"***********FOLD {i} FINISED**********")
     return train_score, val_score
 
-def perform_group_kfold(config, model, criterion, optimizer, dataset):
+def perform_group_kfold(config, model, criterion, optimizer, dataset, lstm=False):
     train_score = pd.Series()
     val_score = pd.Series()
     custom_kfold = CustomKFold(n_splits=config.get("num_folds"), shuffle=True, random_state=42)
-    X = dataset.data
+    X = dataset.dataset.data
     groups = X['filename'].values
     i = 0
     for idx_train, idx_val in custom_kfold.split(X, groups=groups):
@@ -71,14 +71,26 @@ def perform_group_kfold(config, model, criterion, optimizer, dataset):
         validation_subset = Subset(dataset, idx_val)
         train_loader = get_eliptic_dataloader(config, train_subset)
         validation_loader = get_eliptic_dataloader(config, validation_subset)
-        train_acc, validation_acc = train(
-            model=model,
-            criterion=criterion,
-            optimizer=optimizer,
-            train_data_loader=train_loader,
-            validation_data_loader=validation_loader,
-            num_epochs=config.get("num_epochs")
-            )
+        if lstm:
+            train_acc, validation_acc = train_lstm(
+                model=model,
+                criterion=criterion,
+                optimizer=optimizer,
+                train_data_loader=train_loader,
+                validation_data_loader=validation_loader,
+                num_epochs=config.get("num_epochs"),
+                fold=i
+                )
+        else:
+            train_acc, validation_acc = train(
+                model=model,
+                criterion=criterion,
+                optimizer=optimizer,
+                train_data_loader=train_loader,
+                validation_data_loader=validation_loader,
+                num_epochs=config.get("num_epochs"),
+                fold=i
+                )
         train_score.at[i] = train_acc
         val_score.at[i] = validation_acc
         i += 1
