@@ -104,7 +104,7 @@ def test_lstm(model, test_data_loader, criterion, project_path, filename):
     plt.xlabel('Predicciones')
     plt.ylabel('Etiquetas Verdaderas')
     plt.title('Matriz de Confusión')
-    plt.savefig(project_path+"/plots"+filename)
+    plt.savefig(project_path+"/plots/"+filename)
 
 
     # compute the epoch test loss

@@ -25,7 +25,7 @@ class LSTMModel(nn.Module):
         self.hidden_size = 64
         self.input_size = 128
         self.num_layers = 8
-        self.batch_size = 64
+        self.batch_size = 128
         self.lstm = nn.LSTM(input_size=self.input_size, hidden_size=self.hidden_size, num_layers=self.num_layers, batch_first=True)
         self.fc1 = nn.Linear(self.hidden_size, 1)
         self.sig = nn.Sigmoid()
@@ -39,8 +39,6 @@ class LSTMModel(nn.Module):
                 torch.zeros(num_layers, batch_size, hidden_size))
 
     def forward(self, x):
-        if x.shape[1] != 128:
-            x = x.permute(0, 2, 1)
         out, _ = self.lstm(x, self.hidden_state)
         out = out[:, -1, :]
         out = self.fc1(out)

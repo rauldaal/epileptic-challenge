@@ -60,15 +60,18 @@ def perform_group_kfold(config, model, criterion, optimizer, dataset, lstm=False
     custom_kfold = CustomKFold(n_splits=config.get("num_folds"), shuffle=True, random_state=42)
     X = dataset.dataset.data
     groups = X['filename'].values
+    print(len(groups))
     i = 0
     for idx_train, idx_val in custom_kfold.split(X, groups=groups):
-        logging.info("Train indices:", idx_train)
-        logging.info("Train groups:", groups[idx_train])
-        logging.info("val indices:", idx_val)
-        logging.info("val groups:", groups[idx_val])
-        
+        logging.info(f"Train indices: {idx_train}")
+        logging.info(f"Train groups: {groups[idx_train]}")
+        logging.info(f"val indices: {idx_val}")
+        logging.info(f"val groups: {groups[idx_val]}")
+        print(np.max(idx_train))
+        print(np.max(idx_val))
         train_subset = Subset(dataset, idx_train)
         validation_subset = Subset(dataset, idx_val)
+        
         train_loader = get_eliptic_dataloader(config, train_subset)
         validation_loader = get_eliptic_dataloader(config, validation_subset)
         if lstm:
