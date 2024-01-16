@@ -21,7 +21,7 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 THRESHOLD = .5
 
 
-def test(model, test_data_loader, criterion):
+def test(model, test_data_loader, criterion, project_path, filename):
 
     test_loss = 0
     model.eval()
@@ -57,14 +57,14 @@ def test(model, test_data_loader, criterion):
     plt.xlabel('Predicciones')
     plt.ylabel('Etiquetas Verdaderas')
     plt.title('Matriz de Confusión')
-    plt.show()
+    plt.savefig(project_path+"/plots"+filename)
 
     # compute the epoch test loss
     test_loss = test_loss / len(test_data_loader)
     return
 
 
-def test_lstm(model, test_data_loader, criterion):
+def test_lstm(model, test_data_loader, criterion, project_path, filename):
 
     test_loss = 0
     model.eval()
@@ -104,7 +104,8 @@ def test_lstm(model, test_data_loader, criterion):
     plt.xlabel('Predicciones')
     plt.ylabel('Etiquetas Verdaderas')
     plt.title('Matriz de Confusión')
-    plt.show()
+    plt.savefig(project_path+"/plots"+filename)
+
 
     # compute the epoch test loss
     test_loss = test_loss / len(test_data_loader)

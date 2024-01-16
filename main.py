@@ -12,6 +12,7 @@ from handlers import (
     map_configuration,
     load_model,
     perform_k_fold,
+    perform_group_kfold,
     save_model,
     test,
     test_lstm,
@@ -49,8 +50,8 @@ def main(config):
                 logging.info(train_score)
                 logging.info(val_score)
                 save_model(model, config)
-                test_lstm(model=model_LSTM, criterion=criterion_LSTM, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset))
-                test(model=model, criterion=criterion, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset))
+                test_lstm(model=model_LSTM, criterion=criterion_LSTM, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset), project_path=config.get("project_path"), filename="LSTM.png")
+                test(model=model, criterion=criterion, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset), project_path=config.get("project_path"), filename="CONV.png")
                 
                 # Group kfold
                 model, criterion, optimizer = generate_model_objects(config=config)
@@ -64,8 +65,8 @@ def main(config):
                 logging.info(train_score)
                 logging.info(val_score)
                 save_model(model, config)
-                test_lstm(model=model_LSTM, criterion=criterion_LSTM, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset))
-                test(model=model, criterion=criterion, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset))
+                test_lstm(model=model_LSTM, criterion=criterion_LSTM, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset), project_path=config.get("project_path"), filename="groupLSTM.png")
+                test(model=model, criterion=criterion, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset), project_path=config.get("project_path"), filename="groupCONV.png")
                 
             else:
                 model, criterion = load_model(config)
