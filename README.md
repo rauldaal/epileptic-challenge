@@ -36,7 +36,16 @@ Per cada pacient, tenim un fila per finestra del EGG, on hi trobem la classe (Si
 
 I per les npz, un  archiu numpy corresponent a cada finestra per cada pacient
 
-# Metedologia i arquitectura
+## Dataloader 
+
+Per tant, pel desenvolupament del projecte s'ha definit una classe pare ``EpilepticDataset`` el qual agafara el dataset mencionat anteriorment. Del total d'aquestes dades el 80% s'utilitzaran per entrenament i el 20% restant per validació.
+
+Especificar que el dataset ha estat creat de forma per crear un model generalitzar per poder classificar qualsevol pacient, es a dir hem dividit les dades de forma "patient-cross" on les finestres dels pacients de test no tenen finestres seves en l'entrenament i no distigeix segons tipus de pacient com ara edat etc.. per crear un model personalitzat per aquell grup.
+
+A traves d'aquesta classe dataset es creara el dataloader.
+
+
+# Metedologia
 
 La metodologia a seguir per classificar les finestres dels pacients segons si contenen o no un atac epilèpic consistira en fer us de dues xarxes neuronals diferents. En aquestes els hi arrivara la informació de les finestres de cada pacient i si conte o no un atac epilèptic, pero aquesta informació arriva de 21 canals diferents i es informació temporal, per tant s'han definit dues formes d'enfocar el problema.
 
@@ -48,6 +57,7 @@ Per tant a traves d'aquestes xarxes neuronals que s'utilitzaran per l'entrenamen
 
 #### Figura 2
 ![tempsnip](https://github.com/rauldaal/epileptic-challenge/assets/61145059/b5c0e4f5-9011-44ff-beda-a9233333a603)
+
 *Challenge Pipeline*
 *Debora Gil, Guillermo Torres, José Elias Yauri, Carles Sánchez*
 
