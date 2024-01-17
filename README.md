@@ -92,30 +92,41 @@ GrupKfold -> FALTA EXPLICAR
 ## Mètriques i resultats
 
 ### Models CNN
-| Train Loss | Test Loss|
-| -------------| ------------- | 
-|Model 1| Model 1|
-|Model 2| Model 2|
+|   | CNN + KFOLD | CNN + Grup KFOLD|
+|---| -------------| ------------- | 
+|Train loss||Model 1| Model 1|
+|Test loss||Model 2| Model 2|
 
 *Train i test loss*
 
 #### Confusing Matrix
+Observant la matriu de confusió, es veu com aconseguim un ``Accuracy X%``,
+
+
 | Model 1 |Model 2|
 | -------------| ------------- | 
-|cf1|cf2|
+|cf1|cf2| 
+
 *Confusing Matrix*
 
 ### Models LSTM
-| Train Loss | Test Loss|
-| -------------| ------------- | 
-|Model 1|Model 1|
-|Model 2|Model 2|
+|   | LSTM + KFOLD | LSTM + Grup KFOLD|
+|---| -------------| ------------- | 
+|Train loss||Model 1| Model 1|
+|Test loss||Model 2| Model 2|
+
+*Train i test loss*
 
 #### Confusing Matrix
+Observant la matriu de confusió, es veu com aconseguim un ``Accuracy X%``,
+
+
 | Model 1 |Model 2|
 | -------------| ------------- | 
 |cf1|cf2|
+
 *Confusing Matrix*
+
 
 
 ## Contributors
