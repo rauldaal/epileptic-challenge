@@ -28,7 +28,7 @@ class EpilepticDataset(Dataset):
  
 	
 	def init(self):
-		parquet_files = os.listdir(self.folder_parquet)[:5]
+		parquet_files = os.listdir(self.folder_parquet)[:6]
 		patients_files = [pf.split("_")[0]+"_seizure_EEGwindow_1.npz" for pf in parquet_files]
 		i=0
 		for parquet in parquet_files:

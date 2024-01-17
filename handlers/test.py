@@ -21,21 +21,33 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 THRESHOLD = .5
 
 
-def test(model, test_data_loader, criterion):
-
+def test(model, criterion,test_data_loader):
     test_loss = 0
     model.eval()
     logging.info("++++++++"*10)
     correct_predictions = 0
     total_samples = 0
-    for window, cls in tqdm.tqdm(test_data_loader):
-        
+    true_labels=[]
+    pred_labels=[]
+    # print("a")
+    # for window, cls in test_data_loader:
+    #     print(window,cls)
+    for window, cls in test_data_loader:
+        print("aa")
         window = window.to(DEVICE, dtype=torch.float)
         cls = cls.to(DEVICE, dtype=torch.float)
         with torch.no_grad():
             outputs = model(window)
             predictions = (outputs >= THRESHOLD).float()
             correct_predictions += (predictions == cls.view(-1, 1)).sum().item()
+            
+            cls_list = list(map(int, cls.view(-1,1).squeeze().tolist()))
+            pred_list = list(map(int, predictions.squeeze().tolist()))
+            # print("cls",cls_list)
+            # print("pred",pred_list)
+            true_labels.extend(cls_list)
+            pred_labels.extend(pred_list)
+
             total_samples += cls.size(0)
             loss = criterion(outputs, cls.view(-1, 1))
             test_loss += loss.item()
@@ -46,8 +58,21 @@ def test(model, test_data_loader, criterion):
     logging.info("\n\nACCURACY = ", accuracy)
     # compute the epoch test loss
     test_loss = test_loss / len(test_data_loader)
-    return
+    return true_labels,pred_labels
 
+def compute_confussion_matrix(true, pred, project_path, name=None):
+    plt.figure(figsize=(8, 8))
+    conf_matrix = confusion_matrix(true, pred)
+    sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', cbar=False,
+            xticklabels=['Negativo', 'Positivo'], yticklabels=['Negativo', 'Positivo'])
+    plt.xlabel('Etiquetas Predichas')
+    plt.ylabel('Etiquetas Reales')
+    plt.title('Matriz de Confusión')
+    name = name if name else "confussion.png"
+    plt.savefig(project_path+"/plots/"+name)
+    plt.show()
+    acc = accuracy_score(true, pred)
+    logging.info(f"ACCURACY SCORE: {acc}")
 
 def convertir_a_hsv(input, output):
     input_results = []
@@ -75,7 +100,6 @@ def convertir_a_hsv(input, output):
         output_results.append(f_red_output)
 
     return input_results, output_results
-
 
 def classifier(input, output):
     
@@ -111,21 +135,6 @@ def analyzer(results, true_labels, project_path, name=None):
     plt.savefig(project_path+"/plots/"+name)
     plt.show()
     return optimal_threshold
-
-
-def compute_confussion_matrix(true, pred, project_path, name=None):
-    plt.figure(figsize=(8, 8))
-    conf_matrix = confusion_matrix(true, pred)
-    sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', cbar=False,
-            xticklabels=['Negativo', 'Positivo'], yticklabels=['Negativo', 'Positivo'])
-    plt.xlabel('Etiquetas Predichas')
-    plt.ylabel('Etiquetas Reales')
-    plt.title('Matriz de Confusión')
-    name = name if name else "confussion.png"
-    plt.savefig(project_path+"/plots/"+name)
-    plt.show()
-    acc = accuracy_score(true, pred)
-    logging.info(f"ACCURACY SCORE: {acc}")
 
 
 def compute_classification(dataloader, patients_idx, labels, model, project_path):

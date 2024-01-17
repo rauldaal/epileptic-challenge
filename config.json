@@ -2,15 +2,16 @@
     "projectName": "Epilepsy",
     "multiexecution": false,
     "seed": 42,
-    "project_path": "/fhome/mapsiv04/epileptic-challenge",
-    "numpy_folder": "/fhome/mapsiv/Epilepsy/annotated_windows",
-    "parquet_folder":"/fhome/mapsiv04/metadata",
+    "project_path": "D:/Users/Sergi/Documents/IGENIERIA_DE_DADES_2020/ENIYNERIA_DE_DADES/ANY_4/Primer Quadri/PSIV/Repte 4/git clone/epileptic-challenge",
+
+    "numpy_folder": "D:/Users/Sergi/Documents/IGENIERIA_DE_DADES_2020/ENIYNERIA_DE_DADES/ANY_4/Primer Quadri/PSIV/Repte 4/git clone/epileptic-challenge/annotated_windows",
+    "parquet_folder":"D:/Users/Sergi/Documents/IGENIERIA_DE_DADES_2020/ENIYNERIA_DE_DADES/ANY_4/Primer Quadri/PSIV/Repte 4/git clone/epileptic-challenge/metadata",
     "num_folds": 4,
 
-    "numWorkers": 4,
-    "batchSize": [2048],
+    "numWorkers": 0,
+    "batchSize": [600],
     "model_name": null,
-    "execution_name": "testing_execution",
+    "execution_name": "prova_sergi_test_testing_execution_lstm",
 
     "optimizer_type": ["Adam"],
     "num_epochs": [5],

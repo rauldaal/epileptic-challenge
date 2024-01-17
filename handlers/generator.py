@@ -4,13 +4,41 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import pickle
-from objects import EpilepsModel
+from objects import (EpilepsModel,EpilepsyLSTM,LSTMModel)
+
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+def get_default_hyperparameters():
+   
+    # initialize dictionaries
+    inputmodule_params={}
+    net_params={}
+    outmodule_params={}
+    
+    # network input parameters
+    inputmodule_params['n_nodes'] = 21
+    
+    # LSTM unit  parameters
+    net_params['Lstacks'] = 1  # stacked layers (num_layers)
+    net_params['dropout'] = 0.0
+    net_params['hidden_size']= 256  #h
+   
+    # network output parameters
+    outmodule_params['n_classes']=2
+    outmodule_params['hd']=128
+    
+    return inputmodule_params, net_params, outmodule_params
 
+def generate_model_objects(model_type,config):
 
-def generate_model_objects(config):
-    model = EpilepsModel(**config).to(DEVICE)
+    if model_type=="CNN":
+        model = EpilepsModel(**config).to(DEVICE)
+        
+    elif model_type=="LSTM":
+        inputmodule_params, net_params, outmodule_params = get_default_hyperparameters()
+        model = EpilepsyLSTM(inputmodule_params, net_params, outmodule_params).to(DEVICE)
+        model.init_weights()
+        
     criterion = nn.BCELoss()
     if config.get("optimizer_type") == 'Adam':
         optimizer = optim.Adam(model.parameters(), lr=config.get("learning_rate"))
@@ -39,12 +67,26 @@ def save_model(model, config):
         logging.info("Modelo Guardado Correctamente")
     except Exception as e:
         logging.info(f"Error en el guardado. Error: {e}")
+import io
+class CPU_Unpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if module == 'torch.storage' and name == '_load_from_bytes':
+            return lambda b: torch.load(io.BytesIO(b), map_location='cpu')
+        else: return super().find_class(module, name)
 
 
 def load_model(config):
 
     models_dir = os.path.join(config.get("project_path"), 'models')
-    with open(os.path.join(models_dir,config.get("execution_name")+".pickle"), 'rb') as handle:
-        model = pickle.load(handle)
+    with open(os.path.join(models_dir,config.get("model_name")+".pickle"), 'rb') as handle:
+        # model = pickle.load(handle)
+        model = CPU_Unpickler(handle).load()
     criterion = nn.MSELoss()
     return model, criterion
+# def load_model(config):
+
+#     models_dir = os.path.join(config.get("project_path"), 'models')
+#     with open(os.path.join(models_dir,config.get("model_name")+".pickle"), 'rb') as handle:
+#         model = pickle.load(handle)
+#     criterion = nn.MSELoss()
+#     return model, criterion
