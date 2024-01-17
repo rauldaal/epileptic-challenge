@@ -36,7 +36,7 @@ Per cada pacient, tenim un fila per finestra del EGG, on hi trobem la classe (Si
 
 I per les npz, un  archiu numpy corresponent a cada finestra per cada pacient
 
-## Dataloader 
+# Dataloader 
 
 Per tant, pel desenvolupament del projecte s'ha definit una classe pare ``EpilepticDataset`` el qual agafara el dataset mencionat anteriorment. Del total d'aquestes dades el 80% s'utilitzaran per entrenament i el 20% restant per validació.
 
@@ -44,8 +44,7 @@ Especificar que el dataset ha estat creat de forma per crear un model generalitz
 
 A traves d'aquesta classe dataset es creara el dataloader.
 
-
-# Metedologia
+# Metedologia i Arquitectures
 
 La metodologia a seguir per classificar les finestres dels pacients segons si contenen o no un atac epilèpic consistira en fer us de dues xarxes neuronals diferents. En aquestes els hi arrivara la informació de les finestres de cada pacient i si conte o no un atac epilèptic, pero aquesta informació arriva de 21 canals diferents i es informació temporal, per tant s'han definit dues formes d'enfocar el problema.
 
@@ -63,4 +62,47 @@ Per tant a traves d'aquestes xarxes neuronals que s'utilitzaran per l'entrenamen
 
 ### CNN - Arquitectura
 
-L'estrategia a seguir en la CNN donat que teniom 21 canals, sera fer ús 
+La xarxa neuronal consta d'una capa de convolució 1D amb 21 canals d'entrada, 5 canals de sortida i un kernel de mida 6. A continuació, apliquem una capa de MaxPooling 1D amb un kernel de mida 4, un pas de 1 i un rebliment de 1 per reduir la dimensionalitat de les dades. Seguidament, la sortida d'aquesta capa passa a través d'una capa d'aplanat per convertir-la en un vector unidimensional.
+
+Després, es segueixen dues capes totalment connectades: la primera amb 610 unitats de sortida i la segona amb 2 unitats de sortida. Aquestes capes transformen la representació de les dades. Per prevenir el overfitting, introduim un dropout amb una probabilitat del 0.15, que apaga aleatòriament algunes neurones durant l'entrenament.
+
+Finalment, fem una capa completament connectada amb 2 unitats d'entrada i 1 unitat de sortida, seguida d'una capa d'activació com ara una sigmoide.
+
+### LSTM - Arquitectura
+
+FALTA EXPLICAR
+començem amb x nueronas amb tantes capes
+La LSTM constara de 21 features d'entrada, 256 de hidden layer que es la que guarda la informació temporal i contindra 1 sola capa.
+
+L'arquitectura de la capa squencial sera: La primera capa lineal transforma les dades d'entrada, que tenen un nombre de dimensions igual a hidden_size (la sortida d'una capa anterior), en un nou conjunt de dades amb hd unitats de sortida. Després d'aquesta transformació lineal, apliquem la funció d'activació ReLU, introduint no-linearitats.
+
+La segona capa lineal pren les dades de sortida de la primera capa (amb hd unitats) i les transforma en un conjunt final amb n_classes=1 unitats de sortida. Aquesta capa lineal representa l'última transformació de la xarxa abans de la sortida. Finalment, a la sortida, apliquem una funció d'activació com ara una sigmoide.
+
+
+## Entrenament model
+
+Per l'entrenament del model s'han emprat els següents paràmetres , ``5 epoques`` amb la funció d'optimització ``Adam`` i un leraning rate de ``0.0001`` i un btach size de 600 ja que es el que recomana el model LSTM. 
+
+Hem fet la implementació de dos tipus de Kfold per l'entrenament, els quals s'han utilitzat en els dos tipus d'aqruitectura mencionats, per tant hem extret un total de 4 models diferents del que posteriorment veurem els seus resultats:
+
+Kfold -> FALTA EXPLICAR
+
+GrupKfold -> FALTA EXPLICAR
+
+## Mètriques i resultats
+
+### Models CNN
+
+
+### Models LSTM
+
+
+## Contributors
+* Sergi Tordera - 1608676@uab.cat
+* Eric Alcaraz - 1603504@uab.cat                
+* Raul Dalgamoni - 1599225@uab.cat
+
+
+
+
+
