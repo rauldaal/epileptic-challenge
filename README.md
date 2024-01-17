@@ -2,7 +2,8 @@
 Aquest projecte aborda la detecció d'atacs epilèptics mitjançant l'anàlisi d'enregistraments d'electroencefalograma (EEG). Aquesta es una eina  no invasiva per explorar la funcionalitat del cervell en registrar l'activitat elèctrica dels neuronis durant les seves sinapsis. Aquesta activitat es registrara mitjançant un conjunt de 21 elèctrodes situats sobre el cuir cabellut *Figura 1*. Així, els enregistraments d'EEG proporcionen 23 senyals temporals 1D, que en el procés de diagnòstic de l'epilèpsia, el neuroleg visualitza de manera visual les senyals d'EEG enregistrades amb l'objectiu de trobar patrons de pics, ones agudes i ones lentes que caracteritzen una crisi epilèptica. Aquesta anàlisi és una tasca que requereix molt temps pels professionals de la salut, és per això que farem ús de dues xarxes neuronals (CNN i LSTM) per a la detecció i classificació de crisis epilèptiques en finestres de temps.
 
 #### Figura 1
-![image](https://github.com/rauldaal/epileptic-challenge/assets/61145059/a8ca5b32-92b1-4947-9266-32803d102cb7)
+![1200px-21_electrodes_of_International_10-20_system_for_EEG svg](https://github.com/rauldaal/epileptic-challenge/assets/61145059/5343d90a-54ad-489c-92e7-336dd2bda36b)
+
 *Exemple de posició d'eltrodes en EGG*
 
 ## Codi
