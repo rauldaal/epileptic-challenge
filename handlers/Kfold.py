@@ -2,7 +2,7 @@ import logging
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import BaseCrossValidator
-from torch.utils.data import Subset
+from torch.utils.data import Subset, Dataset
 
 from .data import get_eliptic_dataloader
 
@@ -58,11 +58,11 @@ def perform_group_kfold(config, model, criterion, optimizer, dataset, lstm=False
     train_score = pd.Series()
     val_score = pd.Series()
     custom_kfold = CustomKFold(n_splits=config.get("num_folds"), shuffle=True, random_state=42)
-    X = dataset.dataset.data
+    X = dataset.dataset.data.iloc[dataset.indices]
     groups = X['filename'].values
     print(len(groups))
     i = 0
-    for idx_train, idx_val in custom_kfold.split(X, groups=groups):
+    for idx_train, idx_val in custom_kfold.split(dataset, groups=groups):
         logging.info(f"Train indices: {idx_train}")
         logging.info(f"Train groups: {groups[idx_train]}")
         logging.info(f"val indices: {idx_val}")
@@ -100,6 +100,20 @@ def perform_group_kfold(config, model, criterion, optimizer, dataset, lstm=False
 
     return train_score, val_score
     
+# Convert the DataFrame to a PyTorch Dataset
+class CustomDataset(Dataset):
+    def __init__(self, dataframe):
+        self.data = dataframe
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, index):
+        # Implement your data retrieval logic here
+        # For example, if you have a column 'features' and 'target' in your DataFrame:
+        features = torch.tensor(self.data.iloc[index]['features'])
+        target = torch.tensor(self.data.iloc[index]['target'])
+        return features, target
 
 class CustomKFold(BaseCrossValidator):
     def __init__(self, n_splits=5, shuffle=False, random_state=None):
@@ -108,7 +122,8 @@ class CustomKFold(BaseCrossValidator):
         self.random_state = random_state
 
     def _iter_test_indices(self, X, y=None, groups=None):
-        n_samples = X.shape[0]
+        # n_samples = X.shape[0]
+        n_samples = len(X)
         indices = np.arange(n_samples)
 
         if self.shuffle:

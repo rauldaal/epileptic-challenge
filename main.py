@@ -38,24 +38,25 @@ def main(config):
 
             if not config.get("model_name"):
 
-                #model, criterion, optimizer = generate_model_objects(config=config)
-                #model_LSTM, criterion_LSTM, optimizer_LSTM = generate_lstm_model_objects(config=config)
-                train_dataset, test_dataset = generate_eliptic_dataset(config=config)
-                #logging.info("KFOLD LSTM")
-                #train_score, val_score = perform_k_fold(config=config, model=model_LSTM, criterion=criterion_LSTM, optimizer=optimizer_LSTM, dataset=train_dataset, lstm=True)
-                #logging.info(train_score)
-                #logging.info(val_score)
-                #train_score, val_score = perform_k_fold(config=config, model=model, criterion=criterion, optimizer=optimizer, dataset=train_dataset)
-                #logging.info(train_score)
-                #logging.info(val_score)
-                #save_model(model, config)
-                #test_lstm(model=model_LSTM, criterion=criterion_LSTM, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset), project_path=config.get("project_path"), filename="LSTM.png")
-                #test(model=model, criterion=criterion, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset), project_path=config.get("project_path"), filename="CONV.png")
+                # model, criterion, optimizer = generate_model_objects(config=config)
+                # model_LSTM, criterion_LSTM, optimizer_LSTM = generate_lstm_model_objects(config=config)
+                # train_dataset, test_dataset = generate_eliptic_dataset(config=config)
+                # logging.info("KFOLD LSTM")
+                # train_score, val_score = perform_k_fold(config=config, model=model_LSTM, criterion=criterion_LSTM, optimizer=optimizer_LSTM, dataset=train_dataset, lstm=True)
+                # logging.info(train_score)
+                # logging.info(val_score)
+                # train_score, val_score = perform_k_fold(config=config, model=model, criterion=criterion, optimizer=optimizer, dataset=train_dataset)
+                # logging.info(train_score)
+                # logging.info(val_score)
+                # save_model(model, config)
+                # test_lstm(model=model_LSTM, criterion=criterion_LSTM, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset), project_path=config.get("project_path"), filename="LSTM.png")
+                # test(model=model, criterion=criterion, test_data_loader=get_eliptic_dataloader(config=config, subset=test_dataset), project_path=config.get("project_path"), filename="CONV.png")
                 
                 # Group kfold
                 model, criterion, optimizer = generate_model_objects(config=config)
                 model_LSTM, criterion_LSTM, optimizer_LSTM = generate_lstm_model_objects(config=config)
-                # train_dataset, test_dataset = generate_eliptic_dataset(config=config)
+                train_dataset, test_dataset = generate_eliptic_dataset(config=config)
+                logging.info(len(train_dataset))
                 logging.info("GROUP KFOLD LSTM")
                 train_score, val_score = perform_group_kfold(config=config, model=model, criterion=criterion, optimizer=optimizer, dataset=train_dataset)
                 logging.info(train_score)
@@ -72,7 +73,7 @@ def main(config):
 
 
 if __name__ == "__main__":
-    with open("C:/Users/Raul/OneDrive - UAB/4t/MA PSIV/RETO EPILIEPSIA/epileptic-challenge/config.json", "r") as f:
+    with open("config.json", "r") as f:
         config_data = json.load(f)
         main(config=config_data)
 
