@@ -106,8 +106,7 @@ Observant la matriu de confusió, es veu com aconseguim un ``Accuracy X%``,
 
 | CNN + KFOLD | CNN + Grup KFOLD |
 | -------------| ------------- | 
-|![image](https://github.com/rauldaal/epileptic-challenge/assets/88167948/31c7184a-e2c1-42f1-9d0a-5d04b8e45ab9) |![image](https://github.com/rauldaal/epileptic-challenge/assets/88167948/d45dca3c-a311-4728-be79-c0611c974a0f)
-| 
+|![image](https://github.com/rauldaal/epileptic-challenge/assets/88167948/31c7184a-e2c1-42f1-9d0a-5d04b8e45ab9) |![image](https://github.com/rauldaal/epileptic-challenge/assets/88167948/d45dca3c-a311-4728-be79-c0611c974a0f)| 
 
 *Confusing Matrix*
 
@@ -125,7 +124,7 @@ Observant la matriu de confusió, es veu com aconseguim un ``Accuracy X%``,
 
 | Model 1 |Model 2|
 | -------------| ------------- | 
-|cf1|cf2|
+|![image](https://github.com/rauldaal/epileptic-challenge/assets/88167948/a5913996-8f1a-44a0-9b07-8d31f73edb6a) |![image](https://github.com/rauldaal/epileptic-challenge/assets/88167948/73ab752c-4f40-4b10-8d4d-7a2cb9deb4f9)|
 
 *Confusing Matrix*
 
