@@ -94,15 +94,15 @@ GrupKfold -> FALTA EXPLICAR
 ### Models CNN
 | Train Loss | Test Loss|
 | -------------| ------------- | 
-|Model 1|Model 1|
-|Model 2|Model 2|
+|Model 1| Model 1|
+|Model 2| Model 2|
+
 *Train i test loss*
 
-|Confusing Matrix|
+#### Confusing Matrix
 | Model 1 |Model 2|
 | -------------| ------------- | 
 |cf1|cf2|
-
 *Confusing Matrix*
 
 ### Models LSTM
@@ -111,10 +111,11 @@ GrupKfold -> FALTA EXPLICAR
 |Model 1|Model 1|
 |Model 2|Model 2|
 
-|Confusing Matrix|
+#### Confusing Matrix
 | Model 1 |Model 2|
 | -------------| ------------- | 
 |cf1|cf2|
+*Confusing Matrix*
 
 
 ## Contributors
