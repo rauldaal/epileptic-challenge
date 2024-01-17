@@ -25,3 +25,32 @@ L'estructura del projecte es la següent:
    - ``model.py``: Defineix l'arquitectura dels models.
 5. ``models``: Contenidor per guardar els models generats en format .pickle.
 6. ``plots``: Contenidor per guardar les figures referents a les mètriques del model.
+
+# Dataset
+
+Hem treballat en un conjunt de dades procedents de *CHB-MIT Scalp EEG Database* on hem trebellat amb dades d'entre 5 i 7 pacients on cada pacient esta identificat amb ch01 - ch05. De cada pacient tenim les seves dades ``Annoted`` amb els corresponets parquet (metadades) i npz (EGG en format numpy)
+
+En les metadades .parquet hi torbem la seguent ifnormació:
+
+Per cada pacient, tenim un fila per finestra del EGG, on hi trobem la classe (Si hi ha hagut un atac epilèptic en aquell interval) i el filname que referencia al pacient.
+
+I per les npz, un  archiu numpy corresponent a cada finestra per cada pacient
+
+# Metedologia i arquitectura
+
+La metodologia a seguir per classificar les finestres dels pacients segons si contenen o no un atac epilèpic consistira en fer us de dues xarxes neuronals diferents. En aquestes els hi arrivara la informació de les finestres de cada pacient i si conte o no un atac epilèptic, pero aquesta informació arriva de 21 canals diferents i es informació temporal, per tant s'han definit dues formes d'enfocar el problema.
+
+A traves de una CNN on es fusionaran els canals d'entrada a tarves de l'arquitectura del model, utilitzant una convolució de 21 a 5 canals, un MaxPool de kernel 4 i un flatten per aplanar la sortida. 
+
+Per poder abordar el problenma per poder aprofitar la informació temporal en el procees d'apranantatge hem definit una LSTM.
+
+Per tant a traves d'aquestes xarxes neuronals que s'utilitzaran per l'entrenament podem definirla Pipeline que seguira el projecte *Figura 2*
+
+#### Figura 2
+![tempsnip](https://github.com/rauldaal/epileptic-challenge/assets/61145059/b5c0e4f5-9011-44ff-beda-a9233333a603)
+*Challenge Pipeline*
+*Debora Gil, Guillermo Torres, José Elias Yauri, Carles Sánchez*
+
+### CNN - Arquitectura
+
+L'estrategia a seguir en la CNN donat que teniom 21 canals, sera fer ús 
