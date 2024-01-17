@@ -83,11 +83,15 @@ La segona capa lineal pren les dades de sortida de la primera capa (amb hd unita
 
 Per l'entrenament del model s'han emprat els següents paràmetres , ``5 epoques`` amb la funció d'optimització ``Adam`` i un leraning rate de ``0.0001`` i un btach size de 600 ja que es el que recomana el model LSTM. 
 
-Hem fet la implementació de dos tipus de Kfold per l'entrenament, els quals s'han utilitzat en els dos tipus d'aqruitectura mencionats, per tant hem extret un total de 4 models diferents del que posteriorment veurem els seus resultats:
+Hem fet la implementació de dos tipus de K-Fold per l'entrenament, els quals s'han utilitzat en els dos tipus d'aqruitectura mencionats, per tant hem extret un total de 4 models diferents del que posteriorment veurem els seus resultats:
 
-Kfold -> FALTA EXPLICAR
+### K-Fold
+L'objectiu d'utilitzar la tècnica de K-Fold volem separar les dades d'entrenament a dades d'entrenament i validació. D'aquesta forma els models veuran més dades i obtindran millors resultats, amb perillositat de sobre ajustar els models.
 
-GrupKfold -> FALTA EXPLICAR
+Fent servir un K-Fold per a totes les finestres de tots els pacients al conjunt d'entrenament una vegada separat el conjunt de test. Independentment del balanceig entre pacients aquest K-Fold no té en compte la distribució de les dades en generar els folds, per tant, pot ser que en separar les dades es generin folds sense dades d'alguns pacients.
+
+### Grup K-Fold
+Group K-Fold soluciona aquest problema de la distribució de pacients en els diferents folds. D'aquesta forma assegurem que per cada fold que es generi hi ha dades de tots els pacients, tant pels folds d'entrenament com els de validació.
 
 ## Mètriques i resultats
 
