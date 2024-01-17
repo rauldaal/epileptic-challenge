@@ -92,9 +92,29 @@ GrupKfold -> FALTA EXPLICAR
 ## Mètriques i resultats
 
 ### Models CNN
+| Train Loss | Test Loss|
+| -------------| ------------- | 
+|Model 1|Model 1|
+|Model 2|Model 2|
+*Train i test loss*
 
+|Confusing Matrix|
+| Model 1 |Model 2|
+| -------------| ------------- | 
+|cf1|cf2|
+
+*Confusing Matrix*
 
 ### Models LSTM
+| Train Loss | Test Loss|
+| -------------| ------------- | 
+|Model 1|Model 1|
+|Model 2|Model 2|
+
+|Confusing Matrix|
+| Model 1 |Model 2|
+| -------------| ------------- | 
+|cf1|cf2|
 
 
 ## Contributors
