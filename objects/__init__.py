@@ -1,2 +1,2 @@
 from objects.dataset import EpilepticDataset
-from objects.model import EpilepsModel, LSTMModel
+from objects.model import EpilepsModel, LSTMModel,EpilepsyLSTM
