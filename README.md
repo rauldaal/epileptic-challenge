@@ -70,8 +70,6 @@ Finalment, fem una capa completament connectada amb 2 unitats d'entrada i 1 unit
 
 ### LSTM - Arquitectura
 
-FALTA EXPLICAR
-començem amb x nueronas amb tantes capes
 La LSTM constara de 21 features d'entrada, 256 de hidden layer que es la que guarda la informació temporal i contindra 1 sola capa.
 
 L'arquitectura de la capa squencial sera: La primera capa lineal transforma les dades d'entrada, que tenen un nombre de dimensions igual a hidden_size (la sortida d'una capa anterior), en un nou conjunt de dades amb hd unitats de sortida. Després d'aquesta transformació lineal, apliquem la funció d'activació ReLU, introduint no-linearitats.
