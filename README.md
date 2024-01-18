@@ -115,9 +115,8 @@ Observant la matriu de confusió, es veu com aconseguim un ``Accuracy X%``,
 ### Models LSTM
 |   | LSTM + KFOLD | LSTM + Grup KFOLD|
 |---| -------------| ------------- | 
-|Train loss||Model 1| Model 1|
-|Validation loss||Model 1| Model 1|
-|Test loss||Model 2| Model 2|
+|Loss|![W B Chart 18_1_2024, 09_28_13](https://github.com/rauldaal/epileptic-challenge/assets/61145059/d5fa04a9-ed1c-40a2-b1de-0f178ce01fef)| Model 1|
+|Test loss|![W B Chart 18_1_2024, 09_30_51](https://github.com/rauldaal/epileptic-challenge/assets/61145059/570a4e25-ade2-4fbb-9670-c81d45671ede)| Model 2|
 
 *Train i test loss*
 
@@ -127,7 +126,7 @@ Observant la matriu de confusió, es veu com aconseguim un ``Accuracy X%``,
 
 | LSTM + KFOLD |LSTM + Grup KFOLD|
 | -------------| ------------- | 
-|![image](https://github.com/rauldaal/epileptic-challenge/assets/88167948/a5913996-8f1a-44a0-9b07-8d31f73edb6a) |![image](https://github.com/rauldaal/epileptic-challenge/assets/88167948/73ab752c-4f40-4b10-8d4d-7a2cb9deb4f9)|
+|![W B Chart 18_1_2024, 09_30_51](https://github.com/rauldaal/epileptic-challenge/assets/61145059/9a60ea05-cf06-4728-958b-60fc6b49dd99)|![image](https://github.com/rauldaal/epileptic-challenge/assets/88167948/73ab752c-4f40-4b10-8d4d-7a2cb9deb4f9)|
 
 *Confusion Matrix*
 
