@@ -126,7 +126,7 @@ Observant la matriu de confusió, es veu com aconseguim un ``Accuracy X%``,
 
 | LSTM + KFOLD |LSTM + Grup KFOLD|
 | -------------| ------------- | 
-|![W B Chart 18_1_2024, 09_30_51](https://github.com/rauldaal/epileptic-challenge/assets/61145059/9a60ea05-cf06-4728-958b-60fc6b49dd99)|![image](https://github.com/rauldaal/epileptic-challenge/assets/88167948/73ab752c-4f40-4b10-8d4d-7a2cb9deb4f9)|
+|![plotsLSTM](https://github.com/rauldaal/epileptic-challenge/assets/61145059/66601c10-54c5-4d1d-bf16-88e92fdd618c)|![image](https://github.com/rauldaal/epileptic-challenge/assets/88167948/73ab752c-4f40-4b10-8d4d-7a2cb9deb4f9)|
 
 *Confusion Matrix*
 
