@@ -96,9 +96,7 @@ Group K-Fold soluciona aquest problema de la distribució de pacients en els dif
 ### Models CNN
 |   | CNN + KFOLD | CNN + Grup KFOLD|
 |---| -------------| ------------- | 
-|Train loss||Model 1| Model 1|
-|Validation loss||Model 1| Model 1|
-|Test loss||Model 2| Model 2|
+|Loss|![W B Chart 20_1_2024, 12_03_35](https://github.com/rauldaal/epileptic-challenge/assets/61145059/223ed8b3-c0f0-4098-9dae-cc52eb08eb68)|![W B Chart 20_1_2024, 12_08_29](https://github.com/rauldaal/epileptic-challenge/assets/61145059/a8ced896-b34c-4ccb-a142-035ade2b54c8)|
 
 *Train i test loss*
 
