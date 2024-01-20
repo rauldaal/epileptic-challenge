@@ -100,6 +100,8 @@ Group K-Fold soluciona aquest problema de la distribució de pacients en els dif
 
 *Train i test loss*
 
+Podem veure com los curves de la loss segueixen una curvatura semblant tant en train com en validation i aconseguint uns bon valors baixos, per tant descartem l'opcio de que estiguem tenint overfitting. Per altre banda veiem aquest patro en els tant en el model que utilitza Kfold, com en el GroupKfold.
+
 #### Confusion Matrix
 Observant la matriu de confusió, es veu com aconseguim un ``Accuracy X%``,
 
@@ -110,6 +112,8 @@ Observant la matriu de confusió, es veu com aconseguim un ``Accuracy X%``,
 
 *Confusion Matrix*
 
+Observant la matriu de confusió veiem en el cas de Kfold un accuracy del ``95%`` i un recall de ``97%``, per altre banda en el GroupKfold veiem un accuracy del ``97%`` i recall de ``98%``. Per tant per el moment el GroupKfold es el millor model que hem aconseguit.
+
 ### Models LSTM
 |   | LSTM + KFOLD | LSTM + Grup KFOLD|
 |---| -------------| ------------- | 
@@ -117,6 +121,8 @@ Observant la matriu de confusió, es veu com aconseguim un ``Accuracy X%``,
 |Test loss|![W B Chart 18_1_2024, 09_30_51](https://github.com/rauldaal/epileptic-challenge/assets/61145059/570a4e25-ade2-4fbb-9670-c81d45671ede)| ![W B Chart 18_1_2024, 12_25_14](https://github.com/rauldaal/epileptic-challenge/assets/61145059/cc83d511-b9b6-4db6-a206-63a511d3524e)|
 
 *Train i test loss*
+
+Podem veure com los curves de la loss segueixen una curvatura semblant tant en train com en validation, a diferencia de la CNN podem observar pics en la loss, pero aconseguint uns valors baixos, per tant descartem l'opcio de que estiguem tenint overfitting. Per altre banda veiem aquest patro en els tant en el model que utilitza Kfold, com en el GroupKfold.
 
 #### Confusion Matrix
 Observant la matriu de confusió, es veu com aconseguim un ``Accuracy X%``,
@@ -127,7 +133,16 @@ Observant la matriu de confusió, es veu com aconseguim un ``Accuracy X%``,
 |![plotsLSTM](https://github.com/rauldaal/epileptic-challenge/assets/61145059/66601c10-54c5-4d1d-bf16-88e92fdd618c)|![plotsgroupLSTM](https://github.com/rauldaal/epileptic-challenge/assets/61145059/80a274fe-dc10-4f36-875e-4b483f67a8e7)|
 
 *Confusion Matrix*
+Observant la matriu de confusió veiem en el cas de Kfold un accuracy del ``94%`` i un recall de ``96%``, per altre banda en el GroupKfold veiem un accuracy del ``93%`` i recall de ``95%``. Per tant per el moment el GroupKfold es el millor model que hem aconseguit.
 
+## Conclusions
+En base els resultats presentats, podem extreure les següents conclusions:
+
+Els dos tipus de models (CNN i LSTM) presenten bons resultats en termes d'accuracy i recall, indicant que són capaços de fer una classificació efectiva en el conjunt de dades.
+
+L'estratègia de validació creuada Group K-Fold tendeix a proporcionar lleugerament millors resultats en comparació de K-Fold per a ambdós tipus de models.
+
+En general, els models CNN mostren un rendiment lleugerament superior en comparació dels models LSTM en aquest conjunt de dades específic.
 
 
 ## Contributors
